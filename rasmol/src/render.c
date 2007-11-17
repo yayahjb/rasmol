@@ -55,9 +55,6 @@
  ***************************************************************************/
 /* render.c
  $Log: not supported by cvs2svn $
- Revision 1.1.1.1  2006/06/19 22:05:14  todorovg
- Initial Rasmol 2.7.3 Import
-
  Revision 1.1  2004/05/07 19:46:16  yaya
  Initial revision
 
@@ -1922,12 +1919,6 @@ static void DescribeAtom( AtomRef *ptr, int flag )
     for( i=0; str[i] && i<12; i++ )
         if( str[i]!=' ' ) 
              WriteChar(str[i]);
-        
-    if (ptr->atm->model) 
-    {
-    	sprintf(buffer,"/%d",ptr->atm->model);
-    	WriteString(buffer);
-    }
 
     if( flag )
     {   sprintf(buffer," (%ld)",ptr->atm->serno);
@@ -2021,7 +2012,7 @@ int PickAtoms( int shift, int xpos, int ypos )
            y = (double)(QAtom->yorg + QAtom->fyorg + OrigCY)/250.0
                +(double)(QAtom->ytrl)/10000.0;
            z = (double)(QAtom->zorg + QAtom->fzorg + OrigCZ)/250.0
-               +(double)(QAtom->ztrl)/10000.0;
+               -(double)(QAtom->ztrl)/10000.0;
 
 #ifdef INVERT
            sprintf(buffer, "  Coordinates: %9.3f %9.3f %9.3f\n",x,-y,-z);
@@ -2191,7 +2182,7 @@ int PickAtoms( int shift, int xpos, int ypos )
 		/* [GSG 11/21/95] */
 		AddMonitors2(PickHist[0].atm, PickHist[2].atm,
                   PickHist[1].atm, (RAtom __far *)NULL,
-		  (Long) (rint(temp*100)), 128, PickAngle);
+		  (short) (rint(temp*100)), 128, PickAngle);
 		ReDrawFlag |= RFRefresh;
 
 
@@ -2216,7 +2207,7 @@ int PickAtoms( int shift, int xpos, int ypos )
 		/* [GSG 11/21/95] */
 	        AddMonitors2(PickHist[0].atm, PickHist[3].atm,
                   PickHist[1].atm, PickHist[2].atm,
-		     (Long) (rint(temp*100)), 128, PickTorsn);
+		     (short) (rint(temp*100)), 128, PickTorsn);
 		ReDrawFlag |= RFRefresh;
             }
         }

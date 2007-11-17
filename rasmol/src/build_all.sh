@@ -26,21 +26,12 @@ if [ "$1" != "-nobuild" ]; then
 fi;
 rm Imakefile
 echo "#define PIXELDEPTH 32"|cat - Imakefile_save > Imakefile
-gcc checklong.c -o checklong
-VAL=`(./checklong; echo $1)`
-if [ $VAL -gt 4 ]; then
-  mv rasmol.h rasmol_amd64_save.h
-echo "#define _LONGLONG"|cat - rasmol_amd64_save.h > rasmol.h
-fi;
 xmkmf
 mv Makefile Makefile_32BIT
 if [ "$1" != "-nobuild" ]; then
   make -f Makefile_32BIT clean
   make -f Makefile_32BIT rasmol
-  mv rasmol rasmol_32BIT  
-  if [ $VAL -gt 4 ]; then  
-    mv rasmol_amd64_save.h rasmol.h
-  fi;
+  mv rasmol rasmol_32BIT
 fi;
 rm Imakefile
 echo "#define PIXELDEPTH 8" > Imakefile
@@ -65,19 +56,11 @@ fi;
 rm Imakefile
 echo "#define PIXELDEPTH 32" > Imakefile
 echo "#define XFORMSLIB xx"|cat - Imakefile_save >> Imakefile
-if [ $VAL -gt 4 ]; then
-  mv rasmol.h rasmol_amd64_save.h
-echo "#define _LONGLONG"|cat - rasmol_amd64_save.h > rasmol.h
-fi;
 xmkmf
 mv Makefile Makefile_32BIT
 if [ "$1" != "-nobuild" ]; then
   make -f Makefile_32BIT clean
   make -f Makefile_32BIT rasmol
   mv rasmol rasmol_XFORMS_32BIT
-  if [ $VAL -gt 4 ]; then  
-    mv rasmol_amd64_save.h rasmol.h
-  fi;
 fi;
 mv Imakefile_save Imakefile
-rm checklong
