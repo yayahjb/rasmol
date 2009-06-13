@@ -1,0 +1,263 @@
+###########################################################################
+#                             RasMol 2.7.4.2                              #
+#                                                                         #
+#                                 RasMol                                  #
+#                 Molecular Graphics Visualisation Tool                   #
+#                            19 November 2007                             #
+#                          (rev. 21 March 2008)                           #
+#                                                                         #
+#                   Based on RasMol 2.6 by Roger Sayle                    #
+# Biomolecular Structures Group, Glaxo Wellcome Research & Development,   #
+#                      Stevenage, Hertfordshire, UK                       #
+#         Version 2.6, August 1995, Version 2.6.4, December 1998          #
+#                   Copyright (C) Roger Sayle 1992-1999                   #
+#                                                                         #
+#                          and Based on Mods by                           #
+#Author             Version, Date             Copyright                   #
+#Arne Mueller       RasMol 2.6x1   May 98     (C) Arne Mueller 1998       #
+#Gary Grossman and  RasMol 2.5-ucb Nov 95     (C) UC Regents/ModularCHEM  #
+#Marco Molinaro     RasMol 2.6-ucb Nov 96         Consortium 1995, 1996   #
+#                                                                         #
+#Philippe Valadon   RasTop 1.3     Aug 00     (C) Philippe Valadon 2000   #
+#                                                                         #
+#Herbert J.         RasMol 2.7.0   Mar 99     (C) Herbert J. Bernstein    * 
+#Bernstein          RasMol 2.7.1   Jun 99         1998-2008               #
+#                   RasMol 2.7.1.1 Jan 01                                 #
+#                   RasMol 2.7.2   Aug 00                                 #
+#                   RasMol 2.7.2.1 Apr 01                                 #
+#                   RasMol 2.7.2.1.1 Jan 04                               #
+#                   RasMol 2.7.3   Feb 05                                 #
+#                   RasMol 2.7.3.1 Apr 06                                 #
+#                   RasMol 2.7.4   Nov 07                                 #
+#                   RasMol 2.7.4.1 Jan 08                                 #
+#                   RasMol 2.7.4.2 Mar 08                                 #
+#                                                                         #
+# RasMol 2.7.3 incorporates changes by Clarice Chigbo, Ricky Chachra,     #
+# and Mamoru Yamanishi.  Work on RasMol 2.7.3 supported in part by        #
+# grants DBI-0203064, DBI-0315281 and EF-0312612 from the U.S. National   #
+# Science Foundation and grant DE-FG02-03ER63601 from the U.S. Department #
+# of Energy.  RasMol 2.7.4 incorporates changes by G. Todorov, Nan Jia,   #
+# N. Darakev, P. Kamburov, G. McQuillan, J. Jemilawon.  Work on RasMol    #
+# 2.7.4 supported in part by grant 1R15GM078077-01 from the National      #
+# Institute of General Medical Sciences (NIGMS). The content is solely    #
+# the responsibility of the authors and does not necessarily represent    * 
+# the official views of the funding organizations.                        #
+#                                                                         #
+# The code for use of RasMol under GTK in RasMol 2.7.4.2 was written by   #
+# Teemu  Ikonen.                                                          #
+#                                                                         #
+#                    and Incorporating Translations by                    #
+#  Author                               Item                     Language #
+#  Isabel Servan Martinez,                                                #
+#  Jose Miguel Fernandez Fernandez      2.6   Manual             Spanish  #
+#  Jose Miguel Fernandez Fernandez      2.7.1 Manual             Spanish  #
+#  Fernando Gabriel Ranea               2.7.1 menus and messages Spanish  #
+#  Jean-Pierre Demailly                 2.7.1 menus and messages French   #
+#  Giuseppe Martini, Giovanni Paolella, 2.7.1 menus and messages          #
+#  A. Davassi, M. Masullo, C. Liotto    2.7.1 help file          Italian  #
+#  G. Pozhvanov                         2.7.3 menus and messages Russian  #
+#  G. Todorov                           2.7.3 menus and messages Bulgarian#
+#  Nan Jia, G. Todorov                  2.7.3 menus and messages Chinese  #
+#  Mamoru Yamanishi, Katajima Hajime    2.7.3 menus and messages Japanese #
+#                                                                         #
+#                             This Release by                             #
+# Herbert J. Bernstein, Bernstein + Sons, 5 Brewster Ln, Bellport, NY, USA#
+#                       yaya@bernstein-plus-sons.com                      #
+#               Copyright(C) Herbert J. Bernstein 1998-2008               #
+#                                                                         #
+#                READ THE FILE NOTICE FOR RASMOL LICENSES                 #
+#Please read the file NOTICE for important notices which apply to this    #
+#package and for license terms (GPL or RASLIC).                           #
+###########################################################################
+#
+# Imakefile
+# RasMol2 Molecular Graphics
+# Roger Sayle, June 1994
+# Version 2.6.4
+# Roger Sayle, December 1998
+#
+# Version 2.6.9
+# Herbert J. Bernstein, March 1999
+# yaya@bernstein-plus-sons.com
+
+# Version 2.7.2.1+
+# Herbert J. Bernstein, April 2002
+# yaya@Bernstein-plus-sons.com
+
+# Version 2.7.3
+# Herbert J. Bernstein, February 2005
+# yaya@Bernstein-plus-sons.com
+
+# USER DEFINITIONS
+#
+#  At this point, you may define the cpp macro PIXELDEPTH as 8, 16 or 32
+
+#ifdef PIXELDEPTH
+#if PIXELDEPTH==8
+  DEPTHDEF = -DEIGHTBIT
+#endif
+#if PIXELDEPTH==16
+  DEPTHDEF = -DSIXTEENBIT
+#endif
+#if PIXELDEPTH==32
+  DEPTHDEF = -DTHIRTYTWOBIT
+#endif
+#else
+DEPTHDEF = -DTHIRTYTWOBIT
+# DEPTHDEF = -DSIXTEENBIT
+# DEPTHDEF = -DEIGHTBIT
+#endif
+
+#ifdef OLDX_LOCALE
+  LOCALEDEF = -DX_LOCALE
+#else
+  LOCALEDEF =
+#endif
+
+#ifndef GTKWIN
+#define X11WIN
+#endif
+
+#ifdef GTKWIN
+GTKLIBS = $(shell pkg-config --libs vte gtk+-2.0)
+GTKCFLAGS = $(shell pkg-config --cflags vte gtk+-2.0)
+GUISRC = gtkwin.c eggfileformatchooser.c 
+GUIOBJ = gtkwin.o eggfileformatchooser.o
+GUIDEF = -DGTKWIN
+DEPTHDEF = -DTHIRTYTWOBIT
+#endif
+
+#ifdef X11WIN
+GUISRC = x11win.c
+GUIOBJ = x11win.o
+GUIDEF = -DX11WIN
+# using xform library to show GUI dialog
+# Use the first form for Mac OS X, the second for Linux x86
+#ifdef XFORMSLIB
+# XFORMSLIB = -lXpm -L/sw/lib -lforms
+# GUIOPTION = -DXFORMSLIB -I/sw/include
+ XFORMSLIB = -lXpm -L/usr/local/lib -lforms -Wl,-rpath,/usr/local/lib
+ GUIOPTION = -DXFORMSLIB
+#endif
+#endif
+
+# Definitions for CBFLIB
+#
+CBFLIB_VERSION = 0.8.0
+CBFLIB_TARBALL = CBFlib_$(CBFLIB_VERSION).tar.gz
+CBFLIB_TARBALLDIR = ../
+CBFLIB_TARBALL_URL = http://www.bernstein-plus-sons.com/software/$(CBFLIB_TARBALL)
+CBFLIBDIR = $(CBFLIB_TARBALLDIR)/CBFlib_$(CBFLIB_VERSION)
+
+# RasMol's on-line help direcory
+#   e.g. /usr/local/lib/rasmol/rasmol.hlp
+RASMOLDIR = $(USRLIBDIR)/rasmol/
+
+
+DEFINES = $(GTKCFLAGS) $(GUIDEF) -DRASMOLDIR=\"$(RASMOLDIR)\" $(DEPTHDEF) $(LOCALEDEF) \
+          -D_USE_RASMOL_H_ $(GUIOPTION) -I$(CBFLIBDIR)/include
+
+SRCS = rasmol.c rasmol.h molecule.c molecule.h abstree.c abstree.h \
+       cmndline.c cmndline.h command.c command.h tokens.h transfor.c \
+       transfor.h render.c render.h graphics.h pixutils.c \
+       pixutils.h font.h outfile.c outfile.h script.c script.h infile.c \
+       infile.h repres.c repres.h tokens.c cif_fract.c cif_fract.h cif.c \
+       cif.h cif_ctonum.c cif_ctonum.h cif_stx.c \
+       multiple.h multiple.c vector.h vector.c \
+       wbrotate.c wbrotate.c langsel.h langsel_unix.c maps.h maps.c $(GUISRC)
+
+OBJS = rasmol.o molecule.o abstree.o cmndline.o command.o transfor.o \
+       render.o repres.o  pixutils.o outfile.o script.o \
+       infile.o tokens.o  cif_fract.o cif.o cif_ctonum.o cif_stx.o \
+       multiple.o vector.o wbrotate.o langsel_unix.o maps.o $(GUIOBJ)
+
+# Previous Risc/Os definition
+# LDLIBS = -lm -lXinput $(XLIB)
+
+# Additional RS6000 AIX MITSHM Library
+# LDLIBS = -lm -lXi -lXextSam $(XLIB)
+
+LDLIBS = -lm -lXi $(XLIB) $(EXTRA_LIBRARIES) $(XFORMSLIB) $(GTKLIBS) \
+			-L$(CBFLIBDIR)/lib -lcbf
+
+
+
+#
+# Architecture Specific Rules
+#
+#    If running under HPUX, define the appropriate variant
+#    with #define
+#
+
+#ifdef HPArchitecture
+CCOPTIONS = -Ae
+CDEBUGFLAGS = +O2 +Onolimit
+
+#ifdef HPUX_PARISC_32
+CCOPTIONS = -Ae +DA2.0 +DS2.0
+#endif
+
+#ifdef HPUX_PARISC_64
+CCOPTIONS = -Ae +DA2.0W +DS2.0 -D_LONGLONG
+#endif
+
+#ifdef HPUX_IA64_32
+CCOPTIONS = -Ae +DD32 +DSmckinley
+#endif
+
+#ifdef HPUX_IA64_64
+CCOPTIONS = -Ae +DD64 +DSmckinley -D_LONGLONG
+#endif
+#endif
+
+#ifdef MACOSX_FINK
+#ifdef XFORMSLIB
+XFORMSLIB = -lXpm -L/sw/lib -lforms
+GUIOPTION = -DXFORMSLIB -I/sw/include
+#endif
+#endif
+
+ComplexProgramTarget(rasmol)
+MakeDirectories(install,$(RASMOLDIR))
+InstallNonExec(../doc/rasmol.hlp,$(RASMOLDIR))
+InstallNonExec(../data/1crn.pdb,$(RASMOLDIR))
+InstallNonExec(../data/3cro.pdb,$(RASMOLDIR))
+
+cleandir:: 
+	   $(RM) gtkui.h rasmol.man
+
+rasmol.man::	../doc/rasmol.1
+		ln -s ../doc/rasmol.1 rasmol.man
+
+../doc/rasmol.1:	../doc/rasmol.1.gz
+		gunzip  <../doc/rasmol.1.gz > ../doc/rasmol.1
+		
+$(CBFLIBDIR):
+		(cd $(CBFLIB_TARBALLDIR);\
+		  wget $(CBFLIB_TARBALL_URL);\
+		  gunzip < $(CBFLIB_TARBALL) | tar xvf -)
+		  
+$(CBFLIBDIR)/lib/libcbf.a: $(CBFLIBDIR)
+		(cd $(CBFLIBDIR); make lib/libcbf.a)
+		  
+
+$(OBJS):  $(CBFLIBDIR)/lib/libcbf.a
+
+gtkwin.c: gtkui.h
+
+gtkui.h: sizechooser.glade printing-resolution.glade actionmenu.gtk
+	 echo "/* Automatically generated GTK ui definitions, do not edit! */" > gtkui.h
+	 echo >> gtkui.h
+	 echo "const gchar *actionmenu_str = \"\\" >> gtkui.h
+	 cat actionmenu.gtk | sed "s/$$/\\\/" | sed 's/"/\\\"/g' >> gtkui.h
+	 echo "\";" >> gtkui.h
+	 echo >> gtkui.h
+	 echo "const gchar *sizechooser_str = \"\\" >> gtkui.h
+	 gtk-builder-convert -w sizechooser.glade - | sed "s/$$/\\\/" | sed 's/"/\\\"/g' >> gtkui.h
+	 echo "\";" >> gtkui.h
+	 echo >> gtkui.h
+	 echo "const gchar *print_resolution_str = \"\\" >> gtkui.h
+	 gtk-builder-convert -w printing-resolution.glade - | sed "s/$$/\\\/" | sed 's/"/\\\"/g' >> gtkui.h
+	 echo "\";" >> gtkui.h
+	 echo >> gtkui.h
+	 gdk-pixbuf-csource --name=rasmol_icon --struct rasmol_48x48.xpm  >> gtkui.h
