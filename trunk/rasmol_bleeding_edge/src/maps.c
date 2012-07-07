@@ -3796,6 +3796,8 @@ int vector_free(GenericVec __far * __far * vector) {
    sigmas per radius, with the Gaussian treated as zero
    at 4.5 sigma.  If ScaletoAN is set, the Gaussian is scaled to the 
    atomic number, otherwise it is scaled to 1.
+   If SASflag is set, the probe radius is added to the atomic radius
+   and the a very small probe is used.
    
    */
    
@@ -3803,7 +3805,7 @@ int generate_map(MapStruct **map,
                             Long xint, Long yint, Long zint,
                             Long xorig, Long yorig, Long zorig,
                             Long buffer, double sig_per_rad,
-                            int ScaletoAN) {
+                            int ScaletoAN, int SASflag) {
 
     register Chain __far *chain;
     register Group __far *group;
@@ -3886,6 +3888,7 @@ int generate_map(MapStruct **map,
           sig = sqrt((2.*pr*pr + 2.*rad*pr - pr*sqrt(4.*(rad+pr)*(rad+pr) - 4.*rad*rad))/(2.*log(2.)));
 
         }
+          
         
 #ifdef HIPREC
         sigcut = (Long)(6* sig);
@@ -3897,6 +3900,17 @@ int generate_map(MapStruct **map,
 #endif
 #endif
 
+          if (SASflag) {
+              
+              rad = radius+pr;
+              
+              sig = sqrt(-25.*sqrt(200.*rad+2500.)+ 50.*rad+1250.)/(sqrt(2.)*sqrt(log(2.)));
+              
+              sigcut = (Long)(6.*sig);
+              
+          }
+
+          
         xpos = ptr->xorg+ptr->fxorg+OrigCX;
 #ifdef INVERT
         ypos = -(ptr->yorg+ptr->fyorg+OrigCY);
@@ -3990,9 +4004,9 @@ int generate_map(MapStruct **map,
         } else  {
                     
           sig = sqrt((2.*pr*pr + 2.*rad*pr - pr*sqrt(4.*(rad+pr)*(rad+pr) - 4.*rad*rad))/(2.*log(2.)));
-         /*  sig = sqrt((pr*rad)/log(2.)); */
 
         }
+
 
 #ifdef HIPREC
         sigcut = (Long)(6* sig);
@@ -4003,7 +4017,17 @@ int generate_map(MapStruct **map,
         sigcut = (Long)(4.5 *sig);
 #endif
 #endif
-        
+
+          if (SASflag) {
+              
+              rad = radius+pr;
+              
+              sig = sqrt(-25.*sqrt(200.*rad+2500.)+ 50.*rad+1250.)/(sqrt(2.)*sqrt(log(2.)));
+              
+              sigcut = (Long)(6.*sig);
+              
+          }
+
         sig /= 250.;
         
         coeff = 1/(sig*sig*sig*sqrt2pi3);

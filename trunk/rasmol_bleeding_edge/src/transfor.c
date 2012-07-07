@@ -1111,6 +1111,8 @@ void SelectArea( int mode, int count, int xo, int yo, int x, int y )
 		AreaY1 = y1;
 		AreaY2 = y2;
 	}
+	
+	NeedAtomTree = 1;
   
 	/*if count, perform a full atom selection and count atoms*/
 	if( count )
@@ -2385,7 +2387,7 @@ void ColourPointAtom( int mapno )
     MapInfo mapinfo;
     double coord[3];
     
-    if (!AtomTree) {
+    if (!AtomTree ||NeedAtomTree) {
         if (CreateAtomTree()) {
             RasMolFatalExit(MsgStrs[StrMalloc]);
         }
@@ -4034,7 +4036,7 @@ void ResetTransform( void )
     LRotX[0] = 1.0;  LRotX[1] = 0.0;  LRotX[2] = 0.0;
     LRotY[0] = 0.0;  LRotY[1] = 1.0;  LRotY[2] = 0.0;
     LRotZ[0] = 0.0;  LRotZ[1] = 0.0;  LRotZ[2] = 1.0;
-    
+
     LastDialValue[DialRX] = LastDialValue[DialRY] = LastDialValue[DialRZ] = 0.0;
     LastDialValue[DialTX] = LastDialValue[DialTY] = LastDialValue[DialTZ] = 0.0;
     

@@ -279,6 +279,7 @@ typedef struct {
 #define MapMeanFlag     0x800    /* Map level relative to MEAN      */
 #define MapScaleFlag    0x1000   /* Map scaled to atomic no. Z      */
 #define MapLRSurfFlag   0x2000   /* Map with Lee-Richards approx    */  
+#define MapSASurfFlag   0x4000   /* Map with SAS approx             */  
 #define MAP_ORTHOGONAL  0x000    /* Orthogonal map coordinates      */
 #define MAP_FRACTIONAL  0x001    /* Fractional map coordinates      */
 
@@ -453,7 +454,9 @@ int LoadCCP4MapFile( FILE *fp, int info, int mapno );
    Each atom is mapped to a 3D Gaussian based on sig_per_rad
    sigmas per radius, with the Gaussian treated as zero
    at 4.5 sigma.  If ScaletoAN is set, the Gaussian is scaled to the 
-   atomic number, otherwise it is scaled to 1.
+ atomic number, otherwise it is scaled to 1.  
+ If SASflag is set, the probe radius is added to the atomic radius
+ and the a very small probe is used.
    
    sig_per_rad is the reciprocal of the spread.
    
@@ -463,7 +466,7 @@ int generate_map(MapStruct **map,
                             Long xint, Long yint, Long zint,
                             Long xorig, Long yorig, Long zorig,
                             Long buffer, double sig_per_rad,
-                            int ScaletoAN);
+                            int ScaletoAN, int SASflag);
                             
                             
 /* Interpolate a map value from map at position [xpos,ypos,zpos]
