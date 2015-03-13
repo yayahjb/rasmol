@@ -1,0 +1,1 @@
+The RasMol project is an adjunct to the RasMol and OpenrasMol project at http://rasmol.org and the SourceForge OpenRasMol project.   It is hoped that the Google Code project will provide an additional focal point for active collaborative contributions.  RasMol is available under the GPL and the RasMol RASLIC opensource license.
