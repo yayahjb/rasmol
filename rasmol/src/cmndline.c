@@ -4,6 +4,7 @@
  *                                 RasMol                                  *
  *                 Molecular Graphics Visualisation Tool                   *
  *                              13 June 2009                               *
+ *                          (rev. 9 August 2009)                           *
  *                                                                         *
  *                   Based on RasMol 2.6 by Roger Sayle                    *
  * Biomolecular Structures Group, Glaxo Wellcome Research & Development,   *
@@ -723,6 +724,8 @@ static void PerformMouseFunc( int func, int delta, int max )
     {   case(MM_ROTX):  dvalue = ((Real)(2*delta))/((Real)(max));
                         if ( (RotMode == RotBond) && BondSelected) {
                           WrapDial( DialBRot, dvalue );
+                          BondSelected->BRotValue = DialValue[DialBRot];
+                          ReDrawFlag |= RFRotBond;
                         } else if (MouseMode==MMRasOld) {
                           dist = PointX-XRange/2;
                           if (dist < -XRange/8) {
@@ -785,6 +788,8 @@ static void PerformMouseFunc( int func, int delta, int max )
                           dvalue = ((Real)(2*delta))/((Real)(max));
                           if ( (RotMode == RotBond) && BondSelected) {
                           WrapDial( DialBRot, dvalue );
+                          BondSelected->BRotValue = DialValue[DialBRot];
+                          ReDrawFlag |= RFRotBond;
                         } else if (MouseMode==MMRasOld) {
                           dist = PointY-YRange/2;
                           if (dist < -YRange/8) {
@@ -876,7 +881,7 @@ static void PerformMouseFunc( int func, int delta, int max )
     }     
 }
 
-static void ReDial( double SaveValue[10] )
+static void ReDial( double SaveValue[10], CQRQuaternion * SaveQuat )
 {
     int index;
     
@@ -890,12 +895,20 @@ static void ReDial( double SaveValue[10] )
 	    WorldDialValue[DialTX] = DialValue[DialTX];
 	    WorldDialValue[DialTY] = DialValue[DialTY];
 	    WorldDialValue[DialTZ] = DialValue[DialTZ];
+        WorldDialQRot.w = DialQRot.w;
+        WorldDialQRot.x = DialQRot.x;
+        WorldDialQRot.y = DialQRot.y;
+        WorldDialQRot.z = DialQRot.z;
 
 	  }
 	  for (index = 0; index < 7; index++) {
 	    if (!(index == DialZoom))
 	    DialValue[index] = SaveValue[index];
 	  }
+	  DialQRot.w = SaveQuat->w;
+	  DialQRot.x = SaveQuat->x;
+	  DialQRot.y = SaveQuat->y;
+	  DialQRot.z = SaveQuat->z;
 	}
 	return;
 }
@@ -906,11 +919,19 @@ void ProcessMouseMove( int x, int y, int stat )
     register MouseMapping *map;
     register int dx,dy;
     double SaveValue[10];
+    CQRQuaternion SaveQuat;
     int index;
+
+    SaveQuat.w =  SaveQuat.x =  SaveQuat.y =  SaveQuat.z =  0;
+
 
     if (! ( RotMode == RotMol ) ) {
       for (index=0; index<10; index++)
           SaveValue[index] = DialValue[index];
+          SaveQuat.w =  DialQRot.w;
+          SaveQuat.x =  DialQRot.x;
+          SaveQuat.y =  DialQRot.y;
+          SaveQuat.z =  DialQRot.z;
       if (( RotMode == RotBond ) && BondSelected)
           DialValue[DialBRot] = BondSelected->BRotValue;
       else if ( RotMode == RotAll ) {
@@ -920,6 +941,10 @@ void ProcessMouseMove( int x, int y, int stat )
 	      DialValue[DialTX] = WorldDialValue[DialTX];
 	      DialValue[DialTY] = WorldDialValue[DialTY];
 	      DialValue[DialTZ] = WorldDialValue[DialTZ];
+	      DialQRot.w = WorldDialQRot.w;
+	      DialQRot.x = WorldDialQRot.x;
+	      DialQRot.y = WorldDialQRot.y;
+	      DialQRot.z = WorldDialQRot.z;
       }
     }
     
@@ -930,12 +955,12 @@ void ProcessMouseMove( int x, int y, int stat )
         {   InitX = PointX = x;
             InitY = PointY = y;
             HeldButton = True;
-            ReDial( SaveValue );
+            ReDial( SaveValue, &SaveQuat );
             return;
         }
     
         if( IsClose(x,InitX) && IsClose(y,InitY) ) {
-            ReDial( SaveValue );
+            ReDial( SaveValue, &SaveQuat );
             return;
         }                         
         
@@ -953,7 +978,7 @@ void ProcessMouseMove( int x, int y, int stat )
 
         if( !DrawArea )
         {  if( IsClose(x,InitX) && IsClose(y,InitY) ){
-             ReDial( SaveValue );
+             ReDial( SaveValue, &SaveQuat );
              return;
            }                         
     
@@ -996,7 +1021,7 @@ void ProcessMouseMove( int x, int y, int stat )
         HeldButton = False;
     }
 
-    ReDial( SaveValue );
+    ReDial( SaveValue, &SaveQuat );
     return;
 }
 

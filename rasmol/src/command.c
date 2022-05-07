@@ -116,6 +116,8 @@
 #endif
 #include <ctype.h>
 #include <stdio.h>
+#include <time.h>
+
 
 #if !defined(IBMPC) && !defined(VMS) && !defined(APPLEMAC)
 #include <pwd.h>
@@ -323,7 +325,7 @@ void CommandError( char *error )
 /*==========================*/
 
 #ifdef IBMPC
-static char *ProcessFileName( char *name )
+char *ProcessFileName( char *name )
 {
     register char *ptr;
     
@@ -345,7 +347,7 @@ static char *ProcessFileName( char *name )
 #endif
 
 #ifdef APPLEMAC
-static char *ProcessFileName( char *name )
+char *ProcessFileName( char *name )
 {
     register char *ptr;
     
@@ -365,7 +367,7 @@ static char *ProcessFileName( char *name )
 #endif
 
 #ifdef VMS 
-static char *ProcessFileName( char *name )
+char *ProcessFileName( char *name )
 {
     register char *ptr;
     
@@ -397,7 +399,7 @@ static int IsSecure( int ch )
 }
 
 
-static char *ProcessFileName( char *name )
+char *ProcessFileName( char *name )
 {
     register struct passwd *entry;
     register char *temp;
@@ -669,11 +671,11 @@ static int FetchFileOne( int format, int info, char *name )
         
         if( done == 0x9d )
         {   /* Should #include <signal.h> and trap "" SIGPIPE */
-            sprintf(buffer,"trap \"\" 13; uncompress -c %s 2> /dev/null\n",
+            sprintf(buffer,"trap \"\" 13; uncompress -c '%s' 2> /dev/null\n",
                     DataFileName);
         } else if( done == 0x8b )
         {   /* Should #include <signal.h> and trap "" SIGPIPE */
-            sprintf(buffer,"trap \"\" 13; gzip -cdq %s 2> /dev/null\n",
+            sprintf(buffer,"trap \"\" 13; gzip -cdq '%s' 2> /dev/null\n",
                     DataFileName);
         } else /* bad magic number! */
         {   InvalidateCmndLine();
@@ -1284,7 +1286,7 @@ void ShowRecordCommand( void ) {
         if (record_on[1]) WriteString("record appearance on\n");
         else WriteString("record apperance off\n");
         if (RecordMaxMS == 1.) {
-            sprintf(param,RecordTemplate);
+            sprintf(param,"%s",RecordTemplate);
         } else{
             sprintf(param,RecordTemplate,millisec<0?0:millisec);
         }
@@ -1379,7 +1381,7 @@ void ShowPlayCommand( void ) {
             WriteString(param);
         }
         if (PlayMaxMS == 1.) {
-            sprintf(param,PlayTemplate);
+            sprintf(param,"%s",PlayTemplate);
         } else{
             sprintf(param,PlayTemplate,millisec<0?0:millisec);
         }
@@ -1467,7 +1469,7 @@ void WriteMovieFrame( void ) {
         RecordPause = True;
     } else {
         if (RecordMaxMS == 1.) {
-          sprintf(param,RecordTemplate);
+          sprintf(param,"%s",RecordTemplate);
         } else{
           sprintf(param,RecordTemplate,millisec);
         }
@@ -1503,7 +1505,7 @@ static int PlayMovieFrame( void ) {
         for (play_frame[1] = 0;play_frame[1]<=millisec; play_frame[1]++) 
         {
             if (RecordMaxMS == 1.) {
-                sprintf(param,PlayTemplate);
+                sprintf(param,"%s",PlayTemplate);
             } else{
                 sprintf(param,PlayTemplate,millisec-play_frame[1]);
             }
@@ -3430,6 +3432,18 @@ static void ExecuteSetCommand( void )
             break;
         }
 
+        case(IPCDetailTok):
+            FetchToken();
+            if( !CurToken || (CurToken==TrueTok) )
+            {   TkResponseDetail = True;
+                IPCResponseDetail = True;
+            } else if( CurToken == FalseTok )
+            {   TkResponseDetail = False;
+                IPCResponseDetail = False;
+            } else CommandError(MsgStrs[ErrBadOpt]);
+            break;
+
+
             
         default:
             CommandError(MsgStrs[ErrParam]);
@@ -3878,31 +3892,56 @@ static void DescribeSelected( Selection type )
     register RAtom __far *ptr   = (RAtom  __far*)NULL;
     AtomRef current;
     int touched    ;
+    int ctouched   ;
     int Aselect    ;
     int Acount     ;
     int Gselect    ;
     int Gcount     ;
+    int Cselect    ;
+    int Ccount     ;
     int model      ;
-    char buffer[40];
+    char buffer[80];
     
     if(!Database)
         return;
     
     model = -1;
     
+    Cselect = Ccount = 0;
+    current.chn = NULL;
+    ctouched = False;
     for(chain=Database->clist;chain;chain=chain->cnext){
+        if (model != chain->model) {
+            if (model !=-1 && type==MDL) {
+                if (Cselect) {
+                sprintf(buffer, "Model: %d\t(%d/%d)\tchains\n",
+                        model,Cselect, Ccount);
+                WriteString(buffer);
+                } else if (ctouched) {
+                sprintf(buffer, "Model: %d\tno chain completely selected\n",
+                        model);
+                WriteString(buffer);
+                }
+            }
+            model = chain->model;
+            Cselect = Ccount = 0;
+            ctouched = False;
+        }
         Gselect =  Gcount = 0;
         touched = False;
+        if (current.chn != chain) {
+            Ccount++;
         current.chn = chain;
+        }
         for(group=chain->glist;group;group=group->gnext){
             Aselect =  Acount = 0;
             current.grp = group;
             for(ptr=group->alist;ptr;ptr=ptr->anext) {
                 current.atm = ptr;
-                if( !(ptr->flag&HeteroFlag) || type != CHN) { 
                     if( ptr->flag&SelectFlag ) {
                         Aselect++;
                         touched = True;
+                        ctouched = True;
                         if( type == ATM || type == CRD){        /* Atom or Coordinates */
                             WriteString(DescribeObj(&current, type));
                             WriteChar('\n');
@@ -3910,26 +3949,21 @@ static void DescribeSelected( Selection type )
                     }
                     Acount++; 
                 }	  	 
-            }     
-            if( Acount == Aselect )
+            if( touched && Acount == Aselect ) {
                 Gselect++;
-            Gcount++;       
-            if( Aselect && (type == GRP || type == CHN)) { 
-                if (!(model == group->model)) {
-                    model = group->model;
-                    if (model) {
-                        sprintf(buffer,"Model: %d\n",model);
-                        WriteString(buffer);
-                    }
-                }
+                ctouched++;
             }
+            Gcount++;       
             if( Aselect && type == GRP) {	              /* Group */
                 WriteString(DescribeObj(&current, GRP));
                 sprintf(buffer, "\t(%d/%d)\tatoms\n",Aselect, Acount); 
                 WriteString(buffer);
             }
         }
-        if( touched && type == CHN ) {                    /* Chain */      
+        if (ctouched && Gcount == Gselect) {
+            Cselect++;
+        }
+        if( ctouched && type == CHN ) {                    /* Chain */      
             WriteString(DescribeObj(&current, CHN));
             if( Gselect > 0 ) {
                 sprintf(buffer,"\t(%d/%d)\tgroups\n",Gselect, Gcount); 	
@@ -3939,6 +3973,27 @@ static void DescribeSelected( Selection type )
                 WriteString("\tno group completely selected\n");	
         }
     } 
+    if (model !=-1 && type==MDL) {
+        if (Cselect) {
+            sprintf(buffer, "Model: %d\t(%d/%d)\tchains\n",
+                    model,Cselect, Ccount);
+            WriteString(buffer);
+        } else if (ctouched) {
+            sprintf(buffer, "Model: %d\tno chain completely selected\n",
+                    model);
+            WriteString(buffer);
+        }
+    } else if (model == -1 && type==MDL) {
+        if (Cselect) {
+            sprintf(buffer, "One Model: \t(%d/%d)\tchains\n",
+                    Cselect, Ccount);
+            WriteString(buffer);
+        } else if (ctouched) {
+            sprintf(buffer, "%s", "One Model: \tno chain completely selected\n");
+            WriteString(buffer);
+        }
+        
+    }
 }  
 
 
@@ -3959,6 +4014,9 @@ static void ExecuteSelectedCommand()
             break;
         case(ChainTok):
             DescribeSelected(CHN);
+            break;
+        case(ModelTok):
+            DescribeSelected(MDL);
             break;
         case(0):
             DescribeSelected(GRP);  /* default option for show selected is 'group' */
@@ -4261,6 +4319,8 @@ static void ReadAtomSelection( int start )
 		SelectCount = 0;
 	}
 	
+	NeedAtomTree = 1;
+	
 	while( *TokenPtr )
 	{	bloc = 0;
 		neg = 0;
@@ -4272,7 +4332,7 @@ static void ReadAtomSelection( int start )
 		if( ch == '-' )
 			neg = 1;
 		else if( ch != '+' )
-			*TokenPtr--;
+			TokenPtr--;
 		FetchToken();
 		if( CurToken==NumberTok )
 		{	ori = TokenValue;
@@ -4289,7 +4349,7 @@ static void ReadAtomSelection( int start )
 				if( ch == '-' )
 					neg = 1;
 				else if( ch != '+' )
-					*TokenPtr--;
+					TokenPtr--;
 				FetchToken();
 				if( CurToken==NumberTok )
 				{	end = TokenValue;
@@ -4330,7 +4390,7 @@ static void ReadAtomSelection( int start )
 		else
 			bloc = 1;		
 		while( *TokenPtr )
-            *TokenPtr++;
+            TokenPtr++;
 	}
     
 	/*termination*/
@@ -4745,6 +4805,8 @@ static void ApplyMapAtomSelection(int dontadd, int searchwithin, int SearchRadiu
     void CNEARTREE_FAR * objClosest;
     MapPointVec __far *MapPointsPtr;
     double coord[3];
+    clock_t tc1,tc2;
+    tc1 = clock();
 
     /*  First we need to set up the selection flags for CreateAtomTree
      
@@ -4765,11 +4827,15 @@ static void ApplyMapAtomSelection(int dontadd, int searchwithin, int SearchRadiu
                 if (searchwithin==False)  QAtom->flag |= SelectFlag;
             }
     
-    if (!AtomTree || dontadd==True || searchwithin==False) {
+    if (!AtomTree || dontadd==True || searchwithin==False || NeedAtomTree) {
         if (CreateAtomTree()) {
             RasMolFatalExit(MsgStrs[StrMalloc]);
         }
     }
+#ifdef CNEARTREE_INSTRUMENTED
+    visits = 0;
+    CNearTreeSetNodeVisits(AtomTree,visits);
+#endif
     
     /* Now, clear all selection flags */
 
@@ -4810,11 +4876,18 @@ static void ApplyMapAtomSelection(int dontadd, int searchwithin, int SearchRadiu
                         QAtom->flag &= ~SaveFlag;
                     }
                 }
-        if (CreateAtomTree()) {
-            RasMolFatalExit(MsgStrs[StrMalloc]);
-        }
-    }
+     }
     
+    tc2 = clock();
+    fprintf(stderr,"Map select time %g size %ld depth %ld\n",
+            ((double)(tc2-tc1))/CLOCKS_PER_SEC,
+            (long)(AtomTree->m_szsize),(long)(AtomTree->m_szdepth));  
+#ifdef CNEARTREE_INSTRUMENTED
+    CNearTreeGetNodeVisits(AtomTree,&visits);
+    fprintf(stderr,"Node visits %ld\n", (long)visits);
+#endif
+    
+    NeedAtomTree = 1;
     
     return;
  
@@ -5214,9 +5287,10 @@ static void ApplyMapAtomShow(int SearchRadius) {
     lrdistmax = -1.e9;
     
     
-    
+    if (!AtomTree || NeedAtomTree ) {
     if (CreateAtomTree()) {
         RasMolFatalExit(MsgStrs[StrMalloc]);
+    }
     }
     
     if (MapInfoPtr)  {
@@ -5473,7 +5547,9 @@ int ApplyMapMask(int mapno ) {
                     if(generate_map(&mapmaskptr,MapSpacing, 
                                     MapSpacing, MapSpacing, 0L, 0L, 0L,
                                     (Long)(250.*(1.+MapSpread)+MapSpacing), 
-                                    (MapSpread > 0.)?(1./MapSpread):0., (flag&MapScaleFlag)?1:0 )){
+                                    (MapSpread > 0.)?(1./MapSpread):0., 
+                                    (flag&MapScaleFlag)?1:0,
+                                    flag&MapSASurfFlag)){
                         CommandError(MsgStrs[StrMalloc]);
                         return 1;
                     }
@@ -5484,7 +5560,7 @@ int ApplyMapMask(int mapno ) {
                     if ( mapno <= MapInfoPtr->size ) {
                         vector_get_elementptr((GenericVec __far *)MapInfoPtr,(void __far * __far *)&omapinfo,mapno-1 );
                         if (omapinfo && omapinfo->MapPtr) {
-                            mapmaskptr = _fmalloc(sizeof(MapStruct));
+                            mapmaskptr = (MapStruct __far *)_fmalloc(sizeof(MapStruct));
                             if(!mapmaskptr) {
                                 CommandError(MsgStrs[StrMalloc]);
                                 return 1;	
@@ -5586,6 +5662,7 @@ static int ExecuteGenerateCommand( int mapflags ) {
     MapAtmSelVec __far *mapmaskgensel;
     Long MapSpaceAdjust;
     int mapallocfailed;
+    int SASflag;
     char buffer[60];
     
     ApplyMapSelection();
@@ -5599,7 +5676,8 @@ static int ExecuteGenerateCommand( int mapflags ) {
     if (MapSpread < 0.) MapSpread = 2.*((double)(MapSpacing))/750.;
     mapinfo.MapSpread = MapSpread;
     mapinfo.flag = SelectFlag|mapflags;
-    if (mapinfo.flag&MapLRSurfFlag) {
+    SASflag = mapinfo.flag&MapSASurfFlag;
+    if (mapinfo.flag&(MapLRSurfFlag|MapSASurfFlag)) {
         mapinfo.MapSpread = 0.;
         mapinfo.MapLevel = 1.;
         mapinfo.flag &= ~(MapMeanFlag|MapScaleFlag);
@@ -5620,7 +5698,7 @@ static int ExecuteGenerateCommand( int mapflags ) {
     mapinfo.MapLabel = MapLabel;
     MapLabel = NULL;
     if (MapMaskPtr) {
-        mapmaskptr = _fmalloc(sizeof(MapStruct));
+        mapmaskptr = (MapStruct __far *)_fmalloc(sizeof(MapStruct));
         if(!mapmaskptr) {
             CommandError(MsgStrs[StrMalloc]);
             return 1;	
@@ -5687,7 +5765,7 @@ static int ExecuteGenerateCommand( int mapflags ) {
         mapallocfailed=
         generate_map(&mapinfo.MapPtr,mapinfo.MapSpacing*MapSpaceAdjust, mapinfo.MapSpacing*MapSpaceAdjust, mapinfo.MapSpacing*MapSpaceAdjust, 0L, 0L, 0L,
                      (Long)(250.*(1.+mapinfo.MapSpread)+mapinfo.MapSpacing), (mapinfo.MapSpread>0.)?1./mapinfo.MapSpread:0.,
-                     (mapinfo.flag&MapScaleFlag)?1:0 );
+                     (mapinfo.flag&MapScaleFlag)?1:0, SASflag);
         if (!mapallocfailed || MapSpaceAdjust >= 8) break;
         MapSpaceAdjust *= 2;
         sprintf(buffer," Trying coarser map spacing %g\n",((double)(mapinfo.MapSpacing*MapSpaceAdjust))/250.);
@@ -5743,6 +5821,16 @@ static int ExecuteGenerateCommand( int mapflags ) {
         ReDrawFlag |= RFInitial|RFColour;
     }
     return 0;
+}
+
+int ExecuteAtomCommand(int heta) {
+    Long atomno;
+    double __far *pcoords;
+    double coords[3];
+    double __far *poffsetss;
+    double offsets[3];
+    
+    
 }
 
 /* Execute a command given as
@@ -5804,20 +5892,14 @@ int ExecuteCommand( void )
         {  CommandError(MsgStrs[ErrSyntax]);
             return False;      	
         }
-        if (CreateAtomTree()){
-            CommandError(MsgStrs[StrMalloc]);
-            return False;
-        }
+        NeedAtomTree = 1;
         FetchToken();
         if( CurToken == ')' )  {
             FetchToken();
             xret=ExecuteCommandOne(&restore);
             if ( restore ) {
                 LoadAtomSelection();
-                if (CreateAtomTree()){
-                    CommandError(MsgStrs[StrMalloc]);
-                    return False;
-                }                
+                NeedAtomTree = 1;
             }
             return xret;
         }else 
@@ -5857,7 +5939,8 @@ int ExecuteCommandOne( int * restore )
         || CurToken == ScriptTok) *restore = 0;
     
     switch( CurToken )
-    {   case(AxesTok):       ExecuteAxesCommand();       break;
+    {   case(AtomTok):       ExecuteAtomCommand(False);  break;
+        case(AxesTok):       ExecuteAxesCommand();       break;
         case(BoundBoxTok):   ExecuteBoundBoxCommand();   break;
         case(BulgarianTok):  SwitchLang(Bulgarian);      break;
         case(CentreTok):     ExecuteCentreCommand();     break;
@@ -5871,6 +5954,7 @@ int ExecuteCommandOne( int * restore )
         case(FrenchTok):     SwitchLang(French);         break;
     	case(GenerateTok):   ExecuteGenerateCommand(MapMeshFlag);
             break;
+        case(HetAtomTok):    ExecuteAtomCommand(True);   break;
         case(ItalianTok):    SwitchLang(Italian);        break;
         case(JapaneseTok):   SwitchLang(Japanese);       break;
         case(LoadTok):       ExecuteLoadCommand();       break;
@@ -5883,6 +5967,20 @@ int ExecuteCommandOne( int * restore )
         case(SpanishTok):    SwitchLang(Spanish);        break;
         case(TitleTok):      ExecuteTitleCommand();      break;
         case(UnitCellTok):   ExecuteUnitCellCommand();   break;
+            
+        case(TimeTok):
+            {   double prevtime;
+                char buffer[40];
+                prevtime = CommandTime;
+                CommandTime = ((double)(clock()))/CLOCKS_PER_SEC;
+                if (prevtime) {
+                    sprintf(buffer," Time: %g, Delta Time: %g\n", CommandTime, CommandTime-prevtime);
+                } else {
+                    sprintf(buffer," Time: %g\n", CommandTime);
+                }
+                WriteString(buffer);
+            }
+            break;
             
         case(RefreshTok):    RefreshScreen();
                              ReDrawFlag = NextReDrawFlag; break;
@@ -6008,6 +6106,12 @@ int ExecuteCommandOne( int * restore )
             
         case(MoleculeTok):
             FetchToken();
+            if (CurToken == NewTok ) {
+                if (!SetNewMolecule()) {
+                    CommandError(MsgStrs[ErrBadArg]);
+                }
+                break;
+            }
             if (CurToken != NumberTok) {
                 CommandError(MsgStrs[ErrBadArg]);
                 break;
@@ -6044,9 +6148,7 @@ int ExecuteCommandOne( int * restore )
                     DeAllocateExpr(QueryExpr);
                 }
             }
-            if (CreateAtomTree()) {
-                CommandError(MsgStrs[StrMalloc]);
-            }
+            NeedAtomTree = 1;
             break;
             
         case(RestrictTok):
@@ -6073,9 +6175,7 @@ int ExecuteCommandOne( int * restore )
                     DeAllocateExpr(QueryExpr);
                 }
             } 
-            if (CreateAtomTree()) {
-                CommandError(MsgStrs[StrMalloc]);
-            }
+            NeedAtomTree = 1;
             break;
             
             
@@ -6197,6 +6297,10 @@ int ExecuteCommandOne( int * restore )
                             mapflags |= MapLRSurfFlag;
                             FetchToken();
                         }
+                        if (CurToken==SASurfTok) {
+                            mapflags |= MapSASurfFlag;
+                            FetchToken();
+                        }
                         if (CurToken==DotsTok) {
                             mapflags &= ~(MapPointFlag|MapMeshFlag|MapSurfFlag);
                             mapflags |= MapPointFlag;
@@ -6208,10 +6312,6 @@ int ExecuteCommandOne( int * restore )
                         } else if (CurToken==SurfaceTok) {
                             mapflags &= ~(MapPointFlag|MapMeshFlag|MapSurfFlag);
                             mapflags |= MapSurfFlag;
-                            FetchToken();
-                        }
-                        if (CurToken==MolSurfTok) {
-                            mapflags |= MapLRSurfFlag;
                             FetchToken();
                         } else if (CurToken) { 
                             CommandError(MsgStrs[ErrBadArg]);
@@ -6387,6 +6487,7 @@ int ExecuteCommandOne( int * restore )
                                                 WriteString("'!\n");
                                                 break;
                                             }
+                                            break;
                                         }
                                     }
                                     fclose(fp);
@@ -6582,6 +6683,7 @@ int ExecuteCommandOne( int * restore )
                             }
                             ApplyMapAtomSelection(dontadd,searchwithin,SearchRadius);
                         	SelectZone(SelectFlag);
+                        	NeedAtomTree = 1;
                         	ReDrawFlag |= RFRefresh;
                         }
                         else CommandError(MsgStrs[ErrSyntax]);
@@ -6631,6 +6733,7 @@ int ExecuteCommandOne( int * restore )
                             }
                             ApplyMapAtomSelection(dontadd,searchwithin,SearchRadius);
                             RestrictZone(SelectFlag);
+                            NeedAtomTree = 1;
                         	ReDrawFlag |= RFRefresh;
                        }
                         else CommandError(MsgStrs[ErrSyntax]);
@@ -7320,7 +7423,7 @@ int ExecuteCommandOne( int * restore )
                         TokenValue/18000.0;
                         while( BondSelected->BRotValue < -1.0 )
                             BondSelected->BRotValue += 2.0;
-                        while( BRotValue > 1.0 )
+                        while( BondSelected->BRotValue > 1.0 )
                             BondSelected->BRotValue -= 2.0;
                     } else {
                         double xtemp;
@@ -7807,6 +7910,7 @@ int ExecuteCommandOne( int * restore )
             } else switch(option)
             {   case(NMRPDBTok):
                 case(PDBTok):  SavePDBMolecule(param); break;
+                case(WPDBTok): SaveWPDBMolecule(param); break;
                 case(MDLTok):  SaveMDLMolecule(param); break;
                 case(XYZTok):  SaveXYZMolecule(param); break;
                 case(CIFTok):  SaveCIFMolecule(param); break;

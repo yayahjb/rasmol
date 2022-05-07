@@ -1299,7 +1299,6 @@ void UpdateScrollBars( void )
 		g_signal_handler_block(G_OBJECT(vscrollbar), vscr_handler);
 		gtk_range_set_value(GTK_RANGE(vscrollbar), new);
 		g_signal_handler_unblock(G_OBJECT(vscrollbar), vscr_handler);
-		ReDrawFlag |= (1<<YScrlDial);
     }
 
     if ( (RotMode == RotBond) && BondSelected ) {
@@ -1317,7 +1316,6 @@ void UpdateScrollBars( void )
 		g_signal_handler_block(G_OBJECT(hscrollbar), hscr_handler);
 		gtk_range_set_value(GTK_RANGE(hscrollbar), new);
 		g_signal_handler_unblock(G_OBJECT(hscrollbar), hscr_handler);
-		ReDrawFlag |= (1<<XScrlDial);
     }
 
 }
@@ -1464,13 +1462,16 @@ gboolean button_release_cb(GtkWidget *canvas, GdkEventButton *event, gpointer us
 {
     int stat;
 
-	if (!dragging && event->button == 3 && event->type == GDK_BUTTON_RELEASE && !(event->state & (GDK_CONTROL_MASK | GDK_SHIFT_MASK))) {
+    if (!dragging && event->button == 3 && event->type == GDK_BUTTON_RELEASE
+        && !(event->state & (GDK_CONTROL_MASK | GDK_SHIFT_MASK))) {
 		do_popup_menu (canvas, event);
     } else {
     	stat = GetStatus(event->state);
     	ProcessMouseUp(event->x,event->y,stat);
 	}
-
+    if( ReDrawFlag ) {
+        RefreshScreen();
+    }
 	dragging = FALSE;
 	
     return TRUE;
@@ -1568,7 +1569,7 @@ int OpenDisplay(void)
 #ifdef THIRTYTWOBIT
     static ByteTest test;
 #endif
-    register int i,num;
+    int i;
     static char VersionStr[50];
     GError *gerr = NULL;
 
@@ -1681,11 +1682,11 @@ int OpenDisplay(void)
 
 int CreateImage( void )
 {
-    register long size;
-    register Pixel *ptr;
+    long size;
   
-	if( FBuffer ) 
+    if(FBuffer) {
 		_ffree(FBuffer);
+    }
 	size = (long)XRange*YRange*sizeof(Pixel);
 	FBuffer = (Pixel*)_fmalloc( size+32 );
 	

@@ -78,6 +78,8 @@
 /* maps.c
  */
 
+#define MAPS
+
 #include <stdio.h>
 #include <math.h>
  
@@ -92,7 +94,6 @@
 #include "transfor.h"
 #include "multiple.h"
 #include "cif_fract.h"
-#define MAPS
 #include "maps.h"
 
 #ifdef IBMPC
@@ -484,6 +485,7 @@ int SaveMapFile( FILE *fp, int info, int mapno ) {
                 ocmap_axismat[ii][jj] /= templen[jj];
               }    
             }
+            
             
             matmul(Info.mato2f, ocmap_axismat, fcmap_axismat);
             matvec(Info.mato2f, ocmap_axisvec, fcmap_axisvec);
@@ -920,7 +922,7 @@ int SaveMapFile( FILE *fp, int info, int mapno ) {
                     
                     cbf_failnez (cbf_find_column(cbf,"displacement"))
                     cbf_failnez (cbf_set_doublevalue(cbf,"%-g",
-                      ((double)map->xlow*map->yint)*4.e-10))
+                      ((double)map->ylow*map->yint)*4.e-10))
                     
                     cbf_failnez (cbf_find_column(cbf,"displacement_increment"))
                     cbf_failnez (cbf_set_doublevalue(cbf,"%-g",((double)map->yint)*4.e-10))
@@ -2570,6 +2572,7 @@ int LoadCBFMapFile( FILE *fp, int info, int mapno ) {
         cbf_onfailnez(cbf_rewind_row(cbf),
         {if (map) _ffree(map); if (mask) _ffree(mask);}) 
         while (!cbf_find_nextrow(cbf,map_structure_id)) {
+          size_t mapcount;
           cbf_onfailnez(cbf_find_column(cbf,"binary_id"),
           {if (map) _ffree(map); if (mask) _ffree(mask);}) 
           if (!cbf_get_integervalue(cbf,&ii)&&ii==map_bin_id) {
@@ -2604,56 +2607,83 @@ int LoadCBFMapFile( FILE *fp, int info, int mapno ) {
                 register double data;
                 datamax = datamin = datasum = (double)((signed char *)(map->mapdata))[0];
                 datasqsum = datasum*datasum;
+                      mapcount = datasum?1:0;
                 for (ii=1; ii< elements; ii++) {
                   data = (double) (((signed char *)(map->mapdata))[ii]);
+                          if (data) {
+                              if (!mapcount) {
+                                  datamax = datamin = data;
+                              }
+                              mapcount++;
                   datasum += data;
                   datasqsum += data*data;
                   if (data > datamax) datamax = data;
                   if (data < datamin) datamin = data;
                 }
-                datasqsum /= (double)elements;
+                      }
+                      if (mapcount) {
+                          datasqsum /= (double)mapcount;
                 map->mapdatamin = datamin;
                 map->mapdatamax = datamax;
-                map->mapdatamean = datasum/(double)elements;
-                map->mapdataesd= sqrt(datasqsum/(double)elements-
+                          map->mapdatamean = datasum/(double)mapcount;
+                          map->mapdataesd= sqrt(datasqsum-
                   map->mapdatamean*map->mapdatamean);
+                      }
               } else if (elsize==sizeof(short)) {
                 double datamin, datamax, datasum, datasqsum;
                 register double data;
                 datamax = datamin = datasum = (double)((short *)(map->mapdata))[0];
                 datasqsum = datasum*datasum;
+                      mapcount = datasum?1:0;
                 for (ii=1; ii< elements; ii++) {
                   data = (double)(((short *)(map->mapdata))[ii]);
+                          if (data) {
+                              if (!mapcount) {
+                                  datamax = datamin = data;
+                              }
+                              mapcount++;
                   datasum += data;
                   datasqsum += data*data;
                   if (data > datamax) datamax = data;
                   if (data < datamin) datamin = data;
                 }
-                datasqsum /= (double)elements;
+                      }
+                      if (mapcount) {
+                          datasqsum /= (double)mapcount;
                 map->mapdatamin = datamin;
                 map->mapdatamax = datamax;
-                map->mapdatamean = datasum/(double)elements;
-                map->mapdataesd= sqrt(datasqsum/(double)elements-
+                          map->mapdatamean = datasum/(double)mapcount;
+                          map->mapdataesd= sqrt(datasqsum-
                   map->mapdatamean*map->mapdatamean);
+                      }
                   
               } else if (elsize==sizeof(int)) {
                 double datamin, datamax, datasum, datasqsum;
                 register double data;
                 datamax = datamin = datasum = (double)((int *)(map->mapdata))[0];
                 datasqsum = datasum*datasum;
+                      mapcount = datasum?1:0;
                 for (ii=1; ii< elements; ii++) {
                   data = (double)(((int *)(map->mapdata))[ii]);
+                          if (data) {
+                              if (!mapcount) {
+                                  datamax = datamin = data;
+                              }
+                              mapcount++;
                   datasum += data;
                   datasqsum += data*data;
                   if (data > datamax) datamax = data;
                   if (data < datamin) datamin = data;
                 }
-                datasqsum /= (double)elements;
+                      }
+                      if (mapcount) {
+                          datasqsum /= (double)mapcount;
                 map->mapdatamin = datamin;
                 map->mapdatamax = datamax;
-                map->mapdatamean = datasum/(double)elements;
-                map->mapdataesd= sqrt(datasqsum/(double)elements-
+                          map->mapdatamean = datasum/(double)mapcount;
+                          map->mapdataesd= sqrt(datasqsum-
                   map->mapdatamean*map->mapdatamean);
+                      }
                   
               }
               else {if (map) { _ffree(map->mapdata); _ffree(map);} if (mask) _ffree(mask); return CBF_FORMAT;}
@@ -2667,37 +2697,55 @@ int LoadCBFMapFile( FILE *fp, int info, int mapno ) {
                 register double data;
                 datamax = datamin = datasum = (double)((float *)(map->mapdata))[0];
                 datasqsum = datasum*datasum;
+                    mapcount = datasum?1:0;
                 for (ii=1; ii< elements; ii++) {
                   data = (double) (((float *)(map->mapdata))[ii]);
+                        if (data) {
+                            if (!mapcount) {
+                                datamax = datamin = data;
+                            }
+                            mapcount++;
                   datasum += data;
                   datasqsum += data*data;
                   if (data > datamax) datamax = data;
                   if (data < datamin) datamin = data;
                 }
-                datasqsum /= (double)elements;
+                    }
+                    if (mapcount) {
+                        datasqsum /= (double)mapcount;
                 map->mapdatamin = datamin;
                 map->mapdatamax = datamax;
-                map->mapdatamean = datasum/(double)elements;
-                map->mapdataesd= sqrt(datasqsum/(double)elements-
+                        map->mapdatamean = datasum/(double)mapcount;
+                        map->mapdataesd= sqrt(datasqsum-
                   map->mapdatamean*map->mapdatamean);
+                    }
               } else if (elsize==sizeof(double)) {
                 double datamin, datamax, datasum, datasqsum;
                 register double data;
                 datamax = datamin = datasum = ((double *)(map->mapdata))[0];
                 datasqsum = datasum*datasum;
+                    mapcount = datasum?1:0;
                 for (ii=1; ii< elements; ii++) {
                   data = (((double *)(map->mapdata))[ii]);
+                        if (data) {
+                            if (!mapcount) {
+                                datamax = datamin = data;
+                            }
+                            mapcount++;
                   datasum += data;
                   datasqsum += data*data;
                   if (data > datamax) datamax = data;
                   if (data < datamin) datamin = data;
                 }
-                datasqsum /= (double)elements;
+                    }
+                    if (mapcount) {
+                        datasqsum /= (double)mapcount;
                 map->mapdatamin = datamin;
                 map->mapdatamax = datamax;
-                map->mapdatamean = datasum/(double)elements;
-                map->mapdataesd= sqrt(datasqsum/(double)elements-
+                        map->mapdatamean = datasum/(double)mapcount;
+                        map->mapdataesd= sqrt(datasqsum-
                   map->mapdatamean*map->mapdatamean);
+                    }
                   
               }
               else {if (map) { _ffree(map->mapdata); _ffree(map);} if (mask) _ffree(mask); return CBF_FORMAT;}
@@ -3522,6 +3570,46 @@ int vector_add_element(GenericVec __far * vector, void __far * element) {
 
 }
 
+/*  vector_add_elements -- add multiple elements to a generic vector */
+
+int vector_add_elements(GenericVec __far * vector, void __far * elements,
+                       size_t nelements) {
+    
+    size_t newcap;
+    
+    if (!(vector)) return -1;
+    
+    if (vector->size+nelements > vector->capacity) {
+        
+        void __far * temparray;
+        
+        newcap = (nelements-1)+vector->capacity*2;
+        
+        temparray = _fmalloc(newcap*vector->elementsize);
+        if (!temparray)  {
+            newcap = vector->capacity*1.2;
+            if (newcap < vector->capacity+512) newcap = vector->capacity+512;
+            temparray = _fmalloc(newcap*vector->elementsize);
+            if (!temparray) {
+                CommandError(MsgStrs[StrMalloc]);
+                return -1;
+            }
+        }
+        if (vector->size)    
+            memmove((char *)temparray, (char *)vector->array, vector->size*vector->elementsize);
+        _ffree(vector->array);
+        vector->array = temparray;
+        vector->capacity = newcap;
+    }
+    
+    memmove(((char *)(vector->array))+vector->size*vector->elementsize,
+            (char *)elements, nelements*(vector->elementsize));
+    vector->size +=nelements;
+    return 0;
+
+}
+
+
 /* vector_get_element -- get a copy of an element from a generic vector */
 
 int vector_get_element(GenericVec __far * vector, void __far * element, size_t index) {
@@ -3606,6 +3694,53 @@ int vector_set_element(GenericVec __far * vector, void __far * element, size_t i
     
 }
 
+/* vector_set_elements -- set a copy of elements into a generic vector */
+
+int vector_set_elements(GenericVec __far * vector, void __far * elements, 
+                        size_t nelements, size_t index) {
+    
+    size_t newcap;
+    
+    if (index+nelements  > vector->capacity) {
+        
+        void __far * temparray;
+        
+        newcap = (index+vector->capacity);
+        
+        temparray = _fmalloc(newcap*vector->elementsize);
+        if (!temparray)  {
+            newcap = index*1.2;
+            if (newcap < index+128) newcap = index+128;
+            temparray = _fmalloc(newcap*vector->elementsize);
+            if (!temparray) {
+                CommandError(MsgStrs[StrMalloc]);
+                return -1;
+            }
+        }
+        if (vector->size)    
+            memmove((char *)temparray, (char *)vector->array, vector->size*vector->elementsize);
+        _ffree(vector->array);
+        vector->array = temparray;
+        vector->capacity = newcap;
+        _fmemset((void __far *)((char *)vector->array+vector->elementsize*vector->size),
+                 0,(vector->capacity-vector->size)*vector->elementsize);
+    }
+    
+    
+    if (index >= 0 && index+nelements-1 < vector->capacity) {
+        
+        memmove(((char *)(vector->array))+index*vector->elementsize,(char *)elements,
+                nelements*(vector->elementsize));
+        
+        if (index+nelements > vector->size) vector->size = index+nelements;
+        return 0;
+        
+    } else {
+        
+      return -1;
+  }
+    
+}
 
 /* vector_free -- remove a generic vector */
 
@@ -3661,6 +3796,8 @@ int vector_free(GenericVec __far * __far * vector) {
    sigmas per radius, with the Gaussian treated as zero
    at 4.5 sigma.  If ScaletoAN is set, the Gaussian is scaled to the 
    atomic number, otherwise it is scaled to 1.
+   If SASflag is set, the probe radius is added to the atomic radius
+   and the a very small probe is used.
    
    */
    
@@ -3668,7 +3805,7 @@ int generate_map(MapStruct **map,
                             Long xint, Long yint, Long zint,
                             Long xorig, Long yorig, Long zorig,
                             Long buffer, double sig_per_rad,
-                            int ScaletoAN) {
+                            int ScaletoAN, int SASflag) {
 
     register Chain __far *chain;
     register Group __far *group;
@@ -3733,7 +3870,7 @@ int generate_map(MapStruct **map,
         
         Long rad;
         
-        Long sig6;
+        Long sigcut;
         
         double sig;
         
@@ -3752,7 +3889,27 @@ int generate_map(MapStruct **map,
 
         }
         
-        sig6 = (Long)(6* sig);
+        
+#ifdef HIPREC
+        sigcut = (Long)(6* sig);
+#else
+#ifdef LOPREC
+        sigcut = (Long)(3* sig);
+#else
+        sigcut = (Long)(4.5*sig);
+#endif
+#endif
+
+          if (SASflag) {
+              
+              rad = radius+pr;
+              
+              sig = sqrt(-25.*sqrt(200.*rad+2500.)+ 50.*rad+1250.)/(sqrt(2.)*sqrt(log(2.)));
+              
+              sigcut = (Long)(6.*sig);
+              
+          }
+
 
         xpos = ptr->xorg+ptr->fxorg+OrigCX;
 #ifdef INVERT
@@ -3762,12 +3919,12 @@ int generate_map(MapStruct **map,
 #endif
         zpos = -(ptr->zorg+ptr->fzorg+OrigCZ);
         
-        if (xpos-sig6 < xsellow) xsellow = xpos-sig6;
-        if (ypos-sig6 < ysellow) ysellow = ypos-sig6;
-        if (zpos-sig6 < zsellow) zsellow = zpos-sig6;
-        if (xpos+sig6 > xselhigh) xselhigh = xpos+sig6;
-        if (ypos+sig6 > yselhigh) yselhigh = ypos+sig6;
-        if (zpos+sig6 > zselhigh) zselhigh = zpos+sig6;
+        if (xpos-sigcut < xsellow) xsellow = xpos-sigcut;
+        if (ypos-sigcut < ysellow) ysellow = ypos-sigcut;
+        if (zpos-sigcut < zsellow) zsellow = zpos-sigcut;
+        if (xpos+sigcut > xselhigh) xselhigh = xpos+sigcut;
+        if (ypos+sigcut > yselhigh) yselhigh = ypos+sigcut;
+        if (zpos+sigcut > zselhigh) zselhigh = zpos+sigcut;
       }
       
       xsellow -= buffer;
@@ -3829,7 +3986,7 @@ int generate_map(MapStruct **map,
         
         Long rad;
         
-        Long sig6;
+        Long sigcut;
         
         double sig, coeff;
         
@@ -3847,11 +4004,29 @@ int generate_map(MapStruct **map,
         } else  {
                     
           sig = sqrt((2.*pr*pr + 2.*rad*pr - pr*sqrt(4.*(rad+pr)*(rad+pr) - 4.*rad*rad))/(2.*log(2.)));
-         /*  sig = sqrt((pr*rad)/log(2.)); */
 
         }
-        
-        sig6 = (Long)(6* sig);
+
+
+#ifdef HIPREC
+        sigcut = (Long)(6* sig);
+#else
+#ifdef LOPREC
+        sigcut = (Long)(3 *sig);
+#else
+        sigcut = (Long)(4.5 *sig);
+#endif
+#endif
+
+          if (SASflag) {
+              
+              rad = radius+pr;
+              
+              sig = sqrt(-25.*sqrt(200.*rad+2500.)+ 50.*rad+1250.)/(sqrt(2.)*sqrt(log(2.)));
+              
+              sigcut = (Long)(6.*sig);
+              
+          }
         
         sig /= 250.;
         
@@ -3875,33 +4050,37 @@ int generate_map(MapStruct **map,
 #endif
         zpos = -(ptr->zorg + ptr->fzorg +OrigCZ) -zorig;
         
-        xsellow = xpos - sig6;
+        xsellow = xpos - sigcut;
         if (xsellow< 0) xsellow = ( xsellow - (xint-1) )/xint;
         else xsellow = ( xsellow + (xint-1) )/xint;
         if (xsellow < (*map)->xlow) xsellow = (*map)->xlow;
         if (xsellow > (*map)->xhigh) xsellow = (*map)->xhigh;
-        ysellow = ypos - sig6;
+
+        ysellow = ypos - sigcut;
         if (ysellow< 0) ysellow = ( ysellow - (yint-1) )/yint;
         else ysellow = ( ysellow + (yint-1) )/yint;
         if (ysellow < (*map)->ylow) ysellow = (*map)->ylow;
         if (ysellow > (*map)->yhigh) ysellow = (*map)->yhigh;
-        zsellow = zpos - sig6;
+
+        zsellow = zpos - sigcut;
         if (zsellow< 0) zsellow = ( zsellow - (zint-1) )/zint;
         else zsellow = ( zsellow + (zint-1) )/zint;
         if (zsellow < (*map)->zlow) zsellow = (*map)->zlow;
         if (zsellow > (*map)->zhigh) zsellow = (*map)->zhigh;
 
-        xselhigh = xpos + sig6;
+        xselhigh = xpos + sigcut;
         if (xselhigh< 0) xselhigh = ( xselhigh - (xint-1) )/xint;
         else xselhigh = ( xselhigh + (xint-1) )/xint;
         if (xselhigh < (*map)->xlow) xselhigh = (*map)->xlow;
         if (xselhigh > (*map)->xhigh) xselhigh = (*map)->xhigh;
-        yselhigh = ypos + sig6;
+
+        yselhigh = ypos + sigcut;
         if (yselhigh< 0) yselhigh = ( yselhigh - (yint-1) )/yint;
         else yselhigh = ( yselhigh + (yint-1) )/yint;
         if (yselhigh < (*map)->ylow) yselhigh = (*map)->ylow;
         if (yselhigh > (*map)->yhigh) yselhigh = (*map)->yhigh;
-        zselhigh = zpos + sig6;
+
+        zselhigh = zpos + sigcut;
         if (zselhigh< 0) zselhigh = ( zselhigh - (zint-1) )/zint;
         else zselhigh = ( zselhigh + (zint-1) )/zint;
         if (zselhigh < (*map)->zlow) zselhigh = (*map)->zlow;
@@ -4236,7 +4415,7 @@ int interpolate_map_value(MapStruct __far *map,
     
     mapest = logmapest;
     *value = logmapest;
-    if(!gradient) return 0;
+    if(gradient == NULL) return 0;
     
   } else {
 
@@ -4253,7 +4432,7 @@ int interpolate_map_value(MapStruct __far *map,
     }
     
     *value = mapest;
-    if (!gradient) return 0;
+    if (gradient == NULL) return 0;
       
   }
   

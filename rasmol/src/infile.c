@@ -76,7 +76,7 @@
  *package and for license terms (GPL or RASLIC).                           *
  ***************************************************************************/
 /* infile.c
- $Log: infile.c,v $
+ $Log$
  Revision 1.14  2008/07/18 01:11:01  yaya
  Report a syntax error on rotate all 3 in command.c
  Change const char * to char * for datablock name in infile.c -- HJB
@@ -2222,6 +2222,7 @@ int LoadCIFMolecule( FILE *fp )
 
 
     /* Recover the Space Group */
+    Info.spacegroup[0] = '\0';
     if ((!cif_findtag(cif, "_symmetry.space_group_name_H-M")) ||
       (!cif_findtag(cif, "_symmetry_space_group_name_H-M"))) {
       ReadcurCIFstr(cif,Info.spacegroup,12);

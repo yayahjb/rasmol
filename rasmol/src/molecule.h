@@ -449,7 +449,7 @@ void RegisterAlloc(void __far * );
 void FreeAlloc(void __far * );
 
 /* used to describe an defined part of the selected molecule */
-typedef enum{NO, ATM, CRD, GRP, CHN} Selection;
+typedef enum{NO, ATM, CRD, GRP, CHN, MDL} Selection;
 
 #include <CNearTree.h>
 #ifdef MOLECULE
@@ -581,6 +581,7 @@ Bond __far *FreeBond;
 Bond __far *NewBond;
 
 CNearTreeHandle AtomTree;
+int NeedAtomTree;
 
 
 #else
@@ -631,6 +632,7 @@ extern Bond __far *FreeBond;
 extern Bond __far *NewBond;
 
 extern CNearTreeHandle AtomTree;
+extern int NeedAtomTree;
 
 #ifndef APPLEMAC
 #define RegisterAlloc(x)
