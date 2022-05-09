@@ -153,10 +153,10 @@ XFORMSLIB_OBJDEP =
 #ifdef USE_XFORMSLIB
 GUIOPTION = -DXFORMSLIB
 #ifdef XFORMSLIB_LOCAL
-XFORMSLIB_VERSION = 1.0.91
+XFORMSLIB_VERSION = 1.2.4
 XFORMSLIB_TARBALL = xforms-$(XFORMSLIB_VERSION).tar.gz
 XFORMSLIB_TARBALLDIR = $(EXTPKGDIR)
-XFORMSLIB_TARBALL_URL = http://download.savannah.gnu.org/releases-noredirect/xforms/$(XFORMSLIB_TARBALL)
+XFORMSLIB_TARBALL_URL = https://github.com/yayahjb/xforms/archive/refs/tags/xforms-$(XFORMSLIB_TARBALL)
 XFORMSLIB_DIR = $(XFORMSLIB_TARBALLDIR)/xforms-$(XFORMSLIB_VERSION)
 XFORMSLIB_INCLUDE_DIR = $(XFORMSLIB_DIR)/lib/include
 XFORMSLIB_LDLIB = $(XFORMSLIB_DIR)/lib/.libs/libforms.a
@@ -269,7 +269,7 @@ CBFLIB_OBJDEP =
 CQRLIB_VERSION = 1.1.4
 CQRLIB_TARBALL = CQRlib-$(CQRLIB_VERSION).tar.gz
 CQRLIB_TARBALLDIR = $(EXTPKGDIR)
-CQRLIB_TARBALL_URL = http://downloads.sf.net/cqrlib/$(CQRLIB_TARBALL)
+CQRLIB_TARBALL_URL = https://github.com/yayahjb/cqrlib/archives/refs/tags/cqrlib-$(CQRLIB_TARBALL)
 CQRLIB_DIR = $(CQRLIB_TARBALLDIR)/CQRlib-$(CQRLIB_VERSION)
 CQRLIB_INCLUDE_DIR = $(CQRLIB_DIR)
 CQRLIB_LDLIB = $(CQRLIB_DIR)/cqrlib.o
@@ -439,7 +439,8 @@ $(XFORMSLIB_DIR):
 		(cd $(XFORMSLIB_TARBALLDIR);\
 		  wget $(XFORMSLIB_TARBALL_URL);\
 		  touch $(XFORMSLIB_TARBALL);\
-		  gunzip < $(XFORMSLIB_TARBALL) | tar xvf -)
+		  gunzip < $(XFORMSLIB_TARBALL) | tar xvf -; \
+                  mv xforms-xforms-$(XFORMSLIB_VERSION) xforms-$(XFORMSLIB_VERSION))
 
 $(XFORMSLIB_DIR)/lib/.libs/libforms.a: $(XFORMSLIB_DIR)
 		(cd $(XFORMSLIB_DIR); ./configure --enable-static)
@@ -498,7 +499,8 @@ $(CVECTOR_DIR):
 		(cd $(CVECTOR_TARBALLDIR);\
 		  wget $(CVECTOR_TARBALL_URL);\
 		  touch $(CVECTOR_TARBALL);\
-		  gunzip < $(CVECTOR_TARBALL) | tar xvf -)
+		  gunzip < $(CVECTOR_TARBALL) | tar xvf - \
+                  mv cqrlib-CQRlib-$(CQRLIB_VERSION) CQRlib-$(CQRLIB_VERSION))
 		  
 $(CVECTOR_DIR)/CVector.c: $(CVECTOR_DIR)
 #endif
