@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svnroot/cvector/!svn/ver/17/trunk/CVector
+END
+README_CVector.txt
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svnroot/cvector/!svn/ver/17/trunk/CVector/README_CVector.txt
+END
+README_CVector.html
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svnroot/cvector/!svn/ver/17/trunk/CVector/README_CVector.html
+END
+CVector.c
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svnroot/cvector/!svn/ver/9/trunk/CVector/CVector.c
+END
+CVectorBasicTest.c
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svnroot/cvector/!svn/ver/17/trunk/CVector/CVectorBasicTest.c
+END
+CVectorBasicTest_orig.lst
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/cvector/!svn/ver/1/trunk/CVector/CVectorBasicTest_orig.lst
+END
+index.html
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svnroot/cvector/!svn/ver/7/trunk/CVector/index.html
+END
+CVector.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svnroot/cvector/!svn/ver/17/trunk/CVector/CVector.h
+END
+lgpl.txt
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svnroot/cvector/!svn/ver/1/trunk/CVector/lgpl.txt
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svnroot/cvector/!svn/ver/15/trunk/CVector/Makefile
+END

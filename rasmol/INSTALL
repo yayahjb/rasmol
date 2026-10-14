@@ -230,7 +230,7 @@
        http://http://downloads.sf.net/cvector/CVector-1.0.3.tar.gz or
        #define CVECTOR_LOCAL
 
-     * http://download.savannah.gnu.org/releases-noredirect/xforms/xforms-1.0.91.tar.gz
+     * http://download.savannah.gnu.org/releases/xforms/xforms-1.2.4.tar.gz
        or
        #define XFORMSLIB_LOCAL
 
