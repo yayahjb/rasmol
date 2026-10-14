@@ -1,9 +1,9 @@
 /***************************************************************************
- *                              RasMol 2.7.5                               *
+ *                              RasMol 2.7.6                               *
  *                                                                         *
  *                                 RasMol                                  *
  *                 Molecular Graphics Visualisation Tool                   *
- *                              13 June 2009                               *
+ *                            14 October 2026                              *
  *                                                                         *
  *                   Based on RasMol 2.6 by Roger Sayle                    *
  * Biomolecular Structures Group, Glaxo Wellcome Research & Development,   *
@@ -31,6 +31,7 @@
  *                   RasMol 2.7.4.1 Jan 08                                 *
  *                   RasMol 2.7.4.2 Mar 08                                 *
  *                   RasMol 2.7.5   May 09                                 *
+ *                   RasMol 2.7.6   Oct 26                                 *
  *                                                                         *
  * RasMol 2.7.5 incorporates changes by T. Ikonen, G. McQuillan, N. Darakev*
  * and L. Andrews (via the neartree package).  Work on RasMol 2.7.5        *
@@ -67,8 +68,8 @@
  *  Mamoru Yamanishi, Katajima Hajime    2.7.3 menus and messages Japanese *
  *                                                                         *
  *                             This Release by                             *
- * Herbert J. Bernstein, Bernstein + Sons, 5 Brewster Ln, Bellport, NY, USA*
- *                       yaya@bernstein-plus-sons.com                      *
+ * Herbert J. Bernstein, 11 Riverside Drive Apt 5UE, New York, NY10023-1317*
+ *                            yayahjb@gmail.com                            *
  *               Copyright(C) Herbert J. Bernstein 1998-2008               *
  *                                                                         *
  *                READ THE FILE NOTICE FOR RASMOL LICENSES                 *
@@ -186,9 +187,9 @@
 /*==============================*/
 
 #define MAIN_COPYRIGHT "Copyright (C) Roger Sayle 1992-1999"
-#define VERSION "2.7.5"
-#define VER_COPYRIGHT "Copyright (C) Herbert J. Bernstein 1998-2008"
-#define VER_DATE "June 2009"
+#define VERSION "2.7.6"
+#define VER_COPYRIGHT "Copyright (C) Herbert J. Bernstein 1998-2026"
+#define VER_DATE "October 2026"
 
 #ifndef True
 #define True  1

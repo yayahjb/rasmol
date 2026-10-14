@@ -158,10 +158,10 @@ XFORMSLIB_OBJDEP =
 #ifdef USE_XFORMSLIB
 GUIOPTION = -DXFORMSLIB
 #ifdef XFORMSLIB_LOCAL
-XFORMSLIB_VERSION = 1.0.91
+XFORMSLIB_VERSION = 1.2.4
 XFORMSLIB_TARBALL = xforms-$(XFORMSLIB_VERSION).tar.gz
 XFORMSLIB_TARBALLDIR = $(EXTPKGDIR)
-XFORMSLIB_TARBALL_URL = http://download.savannah.gnu.org/releases-noredirect/xforms/$(XFORMSLIB_TARBALL)
+XFORMSLIB_TARBALL_URL = http://download.savannah.gnu.org/releases/xforms/$(XFORMSLIB_TARBALL)
 XFORMSLIB_DIR = $(XFORMSLIB_TARBALLDIR)/xforms-$(XFORMSLIB_VERSION)
 XFORMSLIB_INCLUDE_DIR = $(XFORMSLIB_DIR)/lib/include
 XFORMSLIB_LDLIB = $(XFORMSLIB_DIR)/lib/.libs/libforms.a
@@ -380,8 +380,9 @@ $(XFORMSLIB_DIR):
 		  gunzip < $(XFORMSLIB_TARBALL) | tar xvf -)
 
 $(XFORMSLIB_DIR)/lib/.libs/libforms.a: $(XFORMSLIB_DIR)
-		(cd $(XFORMSLIB_DIR); ./configure --enable-static)
-		(cd $(XFORMSLIB_DIR)/lib; make all)
+		(cd $(XFORMSLIB_DIR); autoreconf -fiv)
+		(cd $(XFORMSLIB_DIR); ./configure --enable-static --enable-dynamic)
+		(cd $(XFORMSLIB_DIR); make all)
 #endif
 
 #ifndef NO_CBFLIB_BUILD

@@ -79,10 +79,12 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 
-main ()
+int main (void)
 
 {
 	long num = 3;
-	printf("%d\n", sizeof (num));
+	printf("%lu\n", sizeof (num));
+        exit(0);
 }
