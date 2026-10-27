@@ -1,55 +1,66 @@
+     ----------------------------------------------------------------------
+
+      | Copying and Distribution | Contents | Installation Instructions |
+      | Changes | Things To Do | Introduction | Source Code and Binaries |
+| RasMol Manual | Spanish Translation of RasMol Manual | Italian Translation of
+                               RasMol Help File |
+                                Release README |
+
                                      README
-                                  RasMol 2.7.5
+                                  RasMol 2.7.6
+
                      Molecular Graphics Visualisation Tool
-                        3 June 2009 (rev. 23 July 2009)
+                               27// October 2026
 
                        Based on RasMol 2.6 by Roger Sayle
 Biomolecular Structures Group, Glaxo Wellcome Research & Development, Stevenage,
                                Hertfordshire, UK
              Version 2.6, August 1995, Version 2.6.4, December 1998
-                      Copyright (c) Roger Sayle 1992-1999
+                       Copyright © Roger Sayle 1992-1999
 
                               and Based on Mods by
 
 +------------------------------------------------------------------------------+
-| Author            | Version, Date        | Copyright                         |
-|-------------------+----------------------+-----------------------------------|
-| Arne Mueller      | RasMol 2.6x1 May     | (c) Arne Mueller 1998             |
-|                   | 1998                 |                                   |
-|-------------------+----------------------+-----------------------------------|
-| Gary Grossman and | RasMol 2.5-ucb       | (c) UC Regents/ModularCHEM        |
-| Marco Molinaro    | November 1995        | Consortium 1995, 1996             |
-|                   | RasMol 2.6-ucb       |                                   |
-|                   | November 1996        |                                   |
-|-------------------+----------------------+-----------------------------------|
-| Philippe Valadon  | RasTop 1.3 August    | (c) Philippe Valadon 2000         |
-|                   | 2000                 |                                   |
-|-------------------+----------------------+-----------------------------------|
-| Herbert J.        | RasMol 2.7.0 March   | (c) Herbert J. Bernstein          |
-| Bernstein         | 1999                 | 1998-2009                         |
-|                   | RasMol 2.7.1 June    |                                   |
-|                   | 1999                 |                                   |
-|                   | RasMol 2.7.1.1       |                                   |
-|                   | January 2001         |                                   |
-|                   | RasMol 2.7.2 August  |                                   |
-|                   | 2000                 |                                   |
-|                   | RasMol 2.7.2.1 April |                                   |
-|                   | 2001                 |                                   |
-|                   | RasMol 2.7.2.1.1     |                                   |
-|                   | January 2004         |                                   |
-|                   | RasMol 2.7.3         |                                   |
-|                   | February 2005        |                                   |
-|                   | RasMol 2.7.3.1 Apr   |                                   |
-|                   | 06                   |                                   |
-|                   | RasMol 2.7.4 Nov 07  |                                   |
-|                   | RasMol 2.7.4.1 Jan   |                                   |
-|                   | 08                   |                                   |
-|                   | RasMol 2.7.4.2 Mar   |                                   |
-|                   | 08                   |                                   |
-|                   | RasMol 2.7.5 June    |                                   |
-|                   | 2009                 |                                   |
-|                   | RasMol 2.7.5.1 July  |                                   |
-|                   | 2009                 |                                   |
+| Author              | Version, Date        | Copyright                       |
+|---------------------+----------------------+---------------------------------|
+| Arne Mueller        | RasMol 2.6x1 May     | © Arne Mueller 1998             |
+|                     | 1998                 |                                 |
+|---------------------+----------------------+---------------------------------|
+| Gary Grossman and   | RasMol 2.5-ucb       | © UC Regents/ModularCHEM        |
+| Marco Molinaro      | November 1995        | Consortium 1995, 1996           |
+|                     | RasMol 2.6-ucb       |                                 |
+|                     | November 1996        |                                 |
+|---------------------+----------------------+---------------------------------|
+| Philippe Valadon    | RasTop 1.3 August    | © Philippe Valadon 2000         |
+|                     | 2000                 |                                 |
+|---------------------+----------------------+---------------------------------|
+| Herbert J.          | RasMol 2.7.0 March   | © Herbert J. Bernstein          |
+| Bernstein           | 1999                 | 1998-2026                       |
+|                     | RasMol 2.7.1 June    |                                 |
+|                     | 1999                 |                                 |
+|                     | RasMol 2.7.1.1       |                                 |
+|                     | January 2001         |                                 |
+|                     | RasMol 2.7.2 August  |                                 |
+|                     | 2000                 |                                 |
+|                     | RasMol 2.7.2.1 April |                                 |
+|                     | 2001                 |                                 |
+|                     | RasMol 2.7.2.1.1     |                                 |
+|                     | January 2004         |                                 |
+|                     | RasMol 2.7.3         |                                 |
+|                     | February 2005        |                                 |
+|                     | RasMol 2.7.3.1 Apr   |                                 |
+|                     | 06                   |                                 |
+|                     | RasMol 2.7.4 Nov 07  |                                 |
+|                     | RasMol 2.7.4.1 Jan   |                                 |
+|                     | 08                   |                                 |
+|                     | RasMol 2.7.4.2 Mar   |                                 |
+|                     | 08                   |                                 |
+|                     | RasMol 2.7.5 June    |                                 |
+|                     | 2009                 |                                 |
+|                     | RasMol 2.7.5.1 July  |                                 |
+|                     | 2009                 |                                 |
+|                     | RasMol 2.7.6 October |                                 |
+|                     | 2026                 |                                 |
 +------------------------------------------------------------------------------+
 
    RasMol 2.7.5 incorporates changes by T. Ikonen, G. McQuillan, N. Darakev
@@ -75,10 +86,10 @@ Biomolecular Structures Group, Glaxo Wellcome Research & Development, Stevenage,
 +-----------------------------------------------------------------------------+
 | Author                               | Item                     | Language  |
 |--------------------------------------+--------------------------+-----------|
-| Isabel Servan Martinez,              | 2.6 Manual               | Spanish   |
-| Jose Miguel Fernandez Fernandez      |                          |           |
+| Isabel Serván Martínez,              | 2.6 Manual               | Spanish   |
+| José Miguel Fernández Fernández      |                          |           |
 |--------------------------------------+--------------------------+-----------|
-| Jose Miguel Fernandez Fernandez      | 2.7.1 Manual             | Spanish   |
+| José Miguel Fernández Fernández      | 2.7.1 Manual             | Spanish   |
 |--------------------------------------+--------------------------+-----------|
 | Fernando Gabriel Ranea               | 2.7.1 menus and messages | Spanish   |
 |--------------------------------------+--------------------------+-----------|
@@ -97,9 +108,9 @@ Biomolecular Structures Group, Glaxo Wellcome Research & Development, Stevenage,
 +-----------------------------------------------------------------------------+
 
                                 This Release by
-   Herbert J. Bernstein, Bernstein + Sons, 5 Brewster Lane, Bellport, NY, USA
-                          yaya@bernstein-plus-sons.com
-                  Copyright (c) Herbert J. Bernstein 1998-2009
+Herbert J. Bernstein, 11 Riverside Drive, Apt 5UE, New York, NY 10023-1317, USA
+                               yayahjb@gmail.com
+                   Copyright © Herbert J. Bernstein 1998-2026
 
    The original RasMol manual was created by Roger Sayle. In July 1996, Dr.
    Margaret Wong of the Chemistry Department, Swinburne University of
@@ -112,31 +123,32 @@ Biomolecular Structures Group, Glaxo Wellcome Research & Development, Stevenage,
    derived with permission from William McClure's version using Roger Sayle's
    rasmol.doc for version 2.6.4 as the primary source. Changes were made in
    August 2000 for RasMol version 2.7.2, January 2001 for RasMol version
-   2.7.1.1 and April 2001 for RasMol version 2.7.2.1 and February 2005 for
-   RasMol version 2.7.3.
+   2.7.1.1, April 2001 for RasMol version 2.7.2.1 and February 2005 for
+   RasMol version 2.7.3. etc., and October 2026 for Rasmol version 2026.
+   Support is now moving from Herbert J. Bernstein to Lawrence Berkeley
+   Laboratory in the hands of Aaron Brewster and Dan Paley under the NIH
+   funded R24 Dials grant.
 
-                    Documentation Last Updated 19 July 2009
+                   Documentation Last Updated 27 October 2026
             Edited by Herbert J. Bernstein and Frances C. Bernstein
 
                                   Translations
 
-   Thanks to the efforts of Jose Miguel Fernandez Fernandez (Departamento de
-   Bioquimica y Biologia Molecular. Universidad de Granada. Espana
+   Thanks to the efforts of José Miguel Fernández Fernández (Departamento de
+   Bioquímica y Biología Molecular. Universidad de Granada. España
    (jmfernan@ugr.es)) a translation of the Manual for Rasmol version 2.7.1
-   into Spanish is now available. La traduccion espanola del manual de la
-   version de la Dra. Wong revisada por Eric Martz fue realizada por Isabel
-   Servan Martinez y Jose Miguel Fernandez Fernandez. La actual traduccion
+   into Spanish is now available. La traducción española del manual de la
+   versión de la Dra. Wong revisada por Eric Martz fue realizada por Isabel
+   Serván Martínez y José Miguel Fernández Fernández. La actual traducción
    del Manual de RasMol 2.7.1 ha sido realizada usando como base la anterior
-   de RasMol 2.6 por  Jose Miguel Fernandez Fernandez.
+   de RasMol 2.6 por  José Miguel Fernández Fernández.
 
-   Thanks to translations by Fernando Gabriel Ranea <davinci@dinamica.com.ar>
-   in late 2000 and early 2001, RasMol is now capable of rendering most menu
-   items and messages in Spanish. Jean-Pierre Demailly
-   <Jean-Pierre.Demailly@ujf-grenoble.fr> provided French translations of
-   menus and messages in January 2001. Giuseppe Martini
-   <martini@iigb.na.cnr.it> and Giovanni Paolella <paolella@dbbm.unina.it>
-   with contributions by A. Davassi, M. Masullo and C. Liotto provided
-   Italian translations of menus and messages in March 2001.
+   Thanks to translations by Fernando Gabriel Ranea in late 2000 and early
+   2001, RasMol is now capable of rendering most menu items and messages in
+   Spanish. Jean-Pierre Demailly provided French translations of menus and
+   messages in January 2001. Giuseppe Martini and Giovanni Paolella with
+   contributions by A. Davassi, M. Masullo and C. Liotto provided Italian
+   translations of menus and messages in March 2001.
 
      ----------------------------------------------------------------------
 
@@ -147,11 +159,15 @@ Biomolecular Structures Group, Glaxo Wellcome Research & Development, Stevenage,
 
                       IMPORTANT - Copying and Distribution
 
-   This version is based directly on RasMol version 2.7.4.2, on RasMol
-   version 2.7.4.1, on RasMol version 2.7.4, on RasMol version 2.7.3.1, on
-   RasMol vesion 2.7.3, on RasMol version 2.7.2.1.1, on RasMol version 2.7.2,
-   on RasMol version 2.7.1, on RasMol version 2.6_CIF.2, on RasMol version
-   2.6x1, on RasMol version 2.6.4, and RasMol 2.5-ucb and 2.6-ucb.
+   You may copy the source of RasMol under the GPL or copy the appropriaate
+   portions of the code that constitute libraties under the LGPL.
+
+   This version is based directly on RasMol 2.7.5, on RasMol 2.7.4.2, on
+   RasMol version 2.7.4.1, on RasMol version 2.7.4, on RasMol version
+   2.7.3.1, on RasMol vesion 2.7.3, on RasMol version 2.7.2.1.1, on RasMol
+   version 2.7.2, on RasMol version 2.7.1, on RasMol version 2.6_CIF.2, on
+   RasMol version 2.6x1, on RasMol version 2.6.4, and RasMol 2.5-ucb and
+   2.6-ucb
 
    Please read the file NOTICE for important notices which apply to this
    package and for license terms (GPL or RASLIC).
@@ -178,9 +194,12 @@ Biomolecular Structures Group, Glaxo Wellcome Research & Development, Stevenage,
 
                                   Introduction
 
-   This posting is made to announce the release of RasMol version 2.7.5. This
-   release is based on RasMol 2.7.4.2, the final reference release for the
-   2.7.4 series.
+   This posting is made to announce the release of RasMol version 2.7.6, This
+   release is based on RasMol 2.7.5. See the RasMol github repository at
+   cctbx/rasmol.
+
+   The main change between the 2.7.5 release in July 2009 is that xforms has
+   been updated from version 1.0.91 to 1.2.4.
 
    The changes made between the 2.7.5 release candidate release of 17 July
    2009 and the formal release on 23 July 2009 were:
@@ -274,30 +293,19 @@ Biomolecular Structures Group, Glaxo Wellcome Research & Development, Stevenage,
 
                             Source Code and Binaries
 
-   The complete source code and user documentation of RasMol 2.7.5 may be
-   obtained http://www.sourceforge.net/projects/rasmol. and by anonymous FTP
-   at:
+   The complete source code and user documentation of RasMol 2.7.6 may be
+   obtained from https://github.com/cctbx/rasmol
 
-   ftp://ftp.bernstein-plus-sons.com/software/RasMol_2.7.5.tar.gz
-
-   or on the web at:
-
-   http://www.bernstein-plus-sons.com/software/RasMol_2.7.5.tar.gz
-
-   http://www.sourceforge.net/projects/rasmol.
-
-     Any comments, suggestions or questions about this modified version of
-          RasMol should be directed to rasmol@bernstein-plus-sons.com.
-
-| OpenRasMol | Copying and Distribution | Contents | Installation Instructions |
+       Copying and Distribution | Contents | Installation Instructions |
       | Changes | Things To Do | Introduction | Source Code and Binaries |
 | RasMol Manual | Spanish Translation of RasMol Manual | Italian Translation of
                             RasMol 2.7.1 Help File |
-      | Donate to Support RasMol | Release README | Register your RasMol |
+                    Release README | Register your RasMol |
 
      ----------------------------------------------------------------------
 
-                             Updated 23 July 2009.
+                            Updated 27 October 2027.
                               Herbert J. Bernstein
+           11 Riverside Drive, Apt 5UE, New York, NY 10023-1317, USA
         Bernstein + Sons, 5 Brewster Lane, Bellport, NY 11713-2803, USA
-                          yaya@bernstein-plus-sons.com
+                               yayahjb@gmail.com
