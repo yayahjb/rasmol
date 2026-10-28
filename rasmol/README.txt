@@ -10,7 +10,7 @@
                                   RasMol 2.7.6
 
                      Molecular Graphics Visualisation Tool
-                               27// October 2026
+                     14 October 2026 (rev 28 October 2026)
 
                        Based on RasMol 2.6 by Roger Sayle
 Biomolecular Structures Group, Glaxo Wellcome Research & Development, Stevenage,
@@ -129,7 +129,7 @@ Herbert J. Bernstein, 11 Riverside Drive, Apt 5UE, New York, NY 10023-1317, USA
    Laboratory in the hands of Aaron Brewster and Dan Paley under the NIH
    funded R24 Dials grant.
 
-                   Documentation Last Updated 27 October 2026
+                   Documentation Last Updated 28 October 2026
             Edited by Herbert J. Bernstein and Frances C. Bernstein
 
                                   Translations
@@ -307,5 +307,4 @@ Herbert J. Bernstein, 11 Riverside Drive, Apt 5UE, New York, NY 10023-1317, USA
                             Updated 27 October 2027.
                               Herbert J. Bernstein
            11 Riverside Drive, Apt 5UE, New York, NY 10023-1317, USA
-        Bernstein + Sons, 5 Brewster Lane, Bellport, NY 11713-2803, USA
                                yayahjb@gmail.com

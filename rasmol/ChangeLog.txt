@@ -16,7 +16,7 @@
   * RasMol 2.7.6 Source Repository https://github.com/cctbx/rasmol.git
 
                      Molecular Graphics Visualisation Tool
-                                14 October 2026
+                     14 October 2026 (rev 28 October 2026)
 
                        Based on RasMol 2.6 by Roger Sayle
 Biomolecular Structures Group, Glaxo Wellcome Research & Development, Stevenage,
@@ -53,8 +53,8 @@ Biomolecular Structures Group, Glaxo Wellcome Research & Development, Stevenage,
 +------------------------------------------------------------------------------+
 
                                 This Release by
-      Herbert J. Bernstein, 11 Riverside Drive, Apt 5UE, New York, NY, USA
-                          yaya@bernstein-plus-sons.com
+Herbert J. Bernstein, 11 Riverside Drive, Apt 5UE, New York, NY 10023-1317, USA
+                        yayahjb@bernstein-plus-sons.com
                    Copyright © Herbert J. Bernstein 1998-2009
 
      ----------------------------------------------------------------------
@@ -82,6 +82,13 @@ Biomolecular Structures Group, Glaxo Wellcome Research & Development, Stevenage,
 
   Changes from RasMol 2.7.5 to create RasMol 2.7.6 include:
 
+
+   [28/10/2026]   HJB ChangeLog.9, ChangeLog.html, Changelog.txt
+                  bring ChangeLog up to date
+
+   [28/10/2026]   HJB INSTALL, INSTALL.html, README, README.html, README.shtml*, README.txt,
+                    TODO.html*, TODO.txt*, NOTICE.html
+                  update documentation removing files marked with asterisk
 
    [14/10/2026]   HJB Imakefile, Imakefile_base, Makefile_8BIT, Makefile_16BIT, Makefile_32BIT
                   move from xforms-1.0.91 to xforms-1.2.4
