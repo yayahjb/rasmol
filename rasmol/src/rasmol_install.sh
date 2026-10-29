@@ -121,7 +121,7 @@ do
     ;;
     --help | * )
       echo "rasmol_install.sh usage:"
-      echo "  rasmol_run.sh [--help] | "
+      echo "  rasmol_install.sh [--help] | "
       echo "    [--prefix=installdir] |"
       echo "    [--compilefonts] |"
       echo "    [--system] | [--local] "
