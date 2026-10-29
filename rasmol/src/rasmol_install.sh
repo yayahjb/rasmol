@@ -1,10 +1,10 @@
 #!/bin/sh
 ###########################################################################
-#                             RasMol 2.7.4.2                              #
+#                             RasMol 2.7.6                                #
 #                                                                         #
 #                                 RasMol                                  #
 #                 Molecular Graphics Visualisation Tool                   #
-#                            19 November 2007                             #
+#                 14 October 2026 (rev 28 October 2026                    #
 #                                                                         #
 #                   Based on RasMol 2.6 by Roger Sayle                    #
 # Biomolecular Structures Group, Glaxo Wellcome Research & Development,   #
@@ -32,7 +32,8 @@
 #                     RasMol 2.7.3.1   Apr 06                             #
 #                     RasMol 2.7.4     Nov 07                             #
 #                     RasMol 2.7.4.2   Mar 08                             #
-#                                                                         #
+#                     Rasmol 2.7.5     Jon 09                             #
+#                     ReaMol 2.7.6     Oct 26                             #
 # RasMol 2.7.3 incorporates changes by Clarice Chigbo, Ricky Chachra,     #
 # and Mamoru Yamanishi.  Work on RasMol 2.7.3 supported in part by        #
 # grants DBI-0203064, DBI-0315281 and EF-0312612 from the U.S. National   #
@@ -59,15 +60,15 @@
 #  Mamoru Yamanishi, Katajima Hajime    2.7.3 menus and messages Japanese #
 #                                                                         #
 #                             This Release by                             #
-# Herbert J. Bernstein, Bernstein + Sons, P.O. Box 177, Bellport, NY, USA #
-#                       yaya@bernstein-plus-sons.com                      #
-#               Copyright(C) Herbert J. Bernstein 1998-2008               #
+#   Herbert J. Bernstein, 11 Riverside Drive, Apt 5UE, New York, NY, USA  #
+#                            yayahjb@gmail.com                            #
+#               Copyright(C) Herbert J. Bernstein 1998-2026               #
 #                                                                         #
-#   This version is based in directly on RasMol version 2.7.4, on RasMol  #
-#   version 2.7.3.1, on RasMol version 2.7.3, on RasMol version 2.7.2.1.1,#
-#   on RasMol version 2.7.2, on RasMol version 2.7.1, on RasMol version   #
-#   2.6_CIF.2, on RasMol version 2.6x1, on RasMol version 2.6.4, and      #
-#   RasMol 2.5-ucb and 2.6-ucb.                                           #
+#   This version is based in directly on RasMol 2.7.5, on RasMol          #
+#   version 2.7.4, on RasMol version 2.7.3.1, on RasMol version 2.7.3,    #
+#   on RasMol version 2.7.2.1.1, on RasMol version 2.7.2, on RasMol       #
+#   version 2.7.1, on RasMol version 2.6_CIF.2, on RasMol version 2.6x1,  #
+#   on RasMol version 2.6.4, RasMol 2.5-ucb and 2.6-ucb.                  #
 #                                                                         #
 #   Please read the file NOTICE for important notices which apply to this # 
 #   package and for license terms (GPL  or RASLIC).                       #
@@ -84,13 +85,14 @@
 #
 #  H. J. Bernstein, 23 December 2006
 #  Rev, 15 March 2008 for Rasmol 2.7.4.2
+#  Rev, 28 October 2026 got RasMol 2.7.6
 #
 
 # Process command line options
 #
 
 
-VERSION=${RASMOL_VERSION-"RasMol_2_7_5"};
+VERSION=${RASMOL_VERSION-"RasMol_2_7_6"};
 
 prefix= ;
 system="no" ;
