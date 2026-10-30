@@ -1,0 +1,46 @@
+Begin3
+Title:		cyr-rfx
+Version:	1.0
+Entered-date:	20MAR2000
+Description:	Cyrillic and Euro fonts for X11.
+		These are PCF fonts in several cyrillic and two latin
+		encodings (both with Euro sign).  Fonts in each encoding occupy
+		a separate .tgz-file.
+
+		The fonts are modified (mainly with cyrillics added) versions
+		of standard X-Window fonts from misc/ and 75dpi/.
+
+		The fonts included are all character-cell *iso8859-1 from
+		misc/, and most important 75dpi/ ones: lu (LucidaSans),
+		lut (LucidaSansTypewriter), tim (Times), helv (Helvetica) and
+		cour (Courier).
+
+		BDF versions are available at the homepage in srctgz/ subdir.
+
+		The CYR-RFX project homepage is located at
+		http://www.inp.nsk.su/~bolkhov/files/fonts/cyr-rfx/00index.en.html
+Keywords:	cyrillic fonts, russian fonts, ukrainian fonts, euro,
+		x11, x-window, koi, koi8, koi-8, koi8-1, koi8-ru, koi8-u,
+		windows-1251, iso8859-5, mac-cyrillic, ibm-cp866, dos,
+		winlatin-1, iso8859-15
+Author:		Dmitry Bolkhovityanov <bolkhov@inp.nsk.su>
+Maintained-by:	Dmitry Bolkhovityanov <bolkhov@inp.nsk.su>
+Primary-site:	ftp.inp.nsk.su /pub/BINP/X11/fonts/cyr-rfx/
+		374k cyr-rfx-ibm-cp866-1.0.tgz
+		554k cyr-rfx-iso10646-0400-1.0.tgz
+		433k cyr-rfx-iso8859-15-1.0.tgz
+		436k cyr-rfx-iso8859-5-1.0.tgz
+		473k cyr-rfx-koi8-1-1.0.tgz
+		446k cyr-rfx-koi8-ru-1.0.tgz
+		422k cyr-rfx-mac-cyrillic-1.0.tgz
+		464k cyr-rfx-windows-1251-1.0.tgz
+		448k cyr-rfx-winlatin-1-1.0.tgz
+Alternate-site:	metalab.unc.edu /pub/Linux/X11/fonts/
+		433k cyr-rfx-iso8859-15-1.0.tgz
+		473k cyr-rfx-koi8-1-1.0.tgz
+		446k cyr-rfx-koi8-ru-1.0.tgz
+		464k cyr-rfx-windows-1251-1.0.tgz
+Original-site:	
+Platforms:	X11
+Copying-policy:	Freely Distributable
+End

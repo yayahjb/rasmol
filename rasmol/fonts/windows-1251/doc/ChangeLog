@@ -1,0 +1,260 @@
+2000-09-30  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* misc/10x20: moved the descender in "cyr_sch"/"cyr_Sch" one pixel to
+	the right -- to be as in "cyr_ts".
+
+	* misc/10x20 is now iso10646-0400-complete.
+
+2000-08-10  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* Made 75dpi/timBI14:"cyr_g" one pixel narrower (removed the middle).
+
+2000-08-09  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* Made a number of changes to fix quotation marks (as described
+	at http://www.cl.cam.ac.uk/~mgk25/ucs/quotes.html):
+
+		* Introduced the "-r" switch to cvtbdf.pl, so that it
+		rearranges the quotation marks -- interchanges
+		"quotesingle"<->"quoteright" and "grave"<->"quoteleft"
+		in the destination encoding (so encoding tables were left
+		unchanged).  And now Makefiles always use "-r".
+
+		* Redraw the (unencoded) quotation marks in misc/ fonts to
+		comply with the standard.
+
+		* Had to change the 0x22 in misc/{7x14,7x14B,8x16,12x24},
+		since the doublequote was way too wrong...
+
+		* In fact, such a "simple" decision isn't ideal, since
+		the glyphs look different in different font families
+		(e.g. "quoteleft" is "upper single 6" in tim* and is
+		"upper reversed 9" in cour*).  But it is definitely
+		better than nothing.
+
+2000-08-09  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* 75dpi/tim* family is koi8-o-complete.
+
+	* Fixed a bug in mkaliases.pl, which made encoding-aliases in the
+	form "adobe-times..." instead of "-adobe-times...".
+
+2000-08-08  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* 100dpi/tim*12 are done and koi8-o- 1251-complete.
+
+	These (100dpi/*12) fonts are used by Netscape as 17pt 75dpi fonts
+	when AllowScaling=yes (Size=14, <BIG>This is 17pt</BIG>).
+
+	But checking them with testtext.html was a knightmare ;) -- Netscape3
+	didn't want to use them "as is" (i.e. after just adding koi8-1/100dpi
+	to fontpath) -- probably due to the fontdirs ordering.  And when I
+	added 100dpi:unscaled and 100dpi to fs/config just after
+	75dpi:unscaled, it began to draw text with empty glyphs...  Finally
+	I hacked the test bdfs for POINT_SIZE to be 170 instead of 120, and
+	Netscape began to use them as usual 75dpi ones.  (What a bugware!)
+
+	We probably need a "-7" ("100->75dpi") switch in cvtbdf.pl, so that
+	it could create 75dpi fonts out of 100dpi, correctly changing
+	FONT, POINT_SIZE, SESOLUTION_X and RESOUTION_Y.  (Just changing
+	the ptSz in FONT with mk100to75aliases.pl doesn't help...)
+
+2000-08-01  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* 75dpi/lu* family is koi8-o- and 1251-complete.
+
+	* Additionally, the look of 75dpi/lu{IS,BIS}* fonts had changed:
+	the "cyr_v", "cyr_t", "cyr_soft" and its derivatives are of more
+	"handwritten" style, like in Office Type Sans.
+
+2000-07-25  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* Corrected the "g with upturn" (both up- and lowcase) in 75dpi/luBS19,
+	where they had no upturns (those were forgot to be added after copying
+	from "g").
+
+2000-07-16  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* 75dpi/tim* family is 1251-complete.
+
+	* 75dpi/timR12: added top-right serif to "cyr_k" (was missing after
+	copying from "k").
+
+2000-07-13  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* Some corrections in 75dpi/timB08: DWIDTH in "cyr_f" was wrong,
+	plus "cyr_m" looked a bit ugly (added a pixel for boldness).
+
+	* General corrections in 75dpi/helvR14: added "edge-fattening"
+	pixels to many glyphs, mainly "cyr_ch" family, "cyr_soft" family
+	("soft", "yeru", "hard", "semisoft", "ve", "ze", "ya" and alikes).
+
+2000-06-04  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* Big changes in a naming/aliasing:
+
+		* cvtbdf.pl can now autorename fonts, e.g.
+		"b&h-lucida=rfx-serene".  The main use is for b&h-lucida*
+		fonts -- due to copyright reasons they are renamed to
+		RFX-Serene*, with appropriate aliases created afterwards.
+
+		* All the aliasing code in makefiles is replaced with a
+		single "mkaliases.pl" script, which is in particular
+		capable of back-aliasing b&h-lucida*->rfx-serene*.
+
+		* Since mkaliases.pl can accept multiple encoding-aliases,
+		some encodings now have two sets of aliases: koi8-ru and
+		koi8-ub have "koi8-r,koi8-u", and winlatin-1 -- "iso8859-1,
+		microsoft-cp1252" aliases.
+
+2000-05-14  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* The "mainsize" fonts (misc/7x14, 75dpi/{courR14,helvR14,luRS12,
+	lutRS12,ncenR14,timR14}) are iso10646-0400-complete.
+
+2000-05-08  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* Introduced the "koi8-o" (old-Cyrillic) encoding.  It is based on
+	koi8-ub, with "izhitsa", "yat" and "fita" added.
+
+	* All the misc/ fonts are koi8-o-complete.
+
+2000-04-16  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* Version 1.1:
+
+	* The "koi8-ub" (Ukrainian-Byelorussian-Russian) and "bulgarian-mik"
+	encodings added.
+
+        * Added the registry-encoding alias "microsoft-cp1251"->"windows-1251".
+
+2000-03-20  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* The version number is added to all the .tgz-filenames
+	(cyr-rfx-ENCODING-VERSION.tgz and cyr-rfx-ENCODING-VERSION.bdfs.tgz).
+
+2000-03-15  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* Changed the name from "CYR_RFX" to "CYR-RFX", since Metalab
+	(ex-SunSite) and FreshMeat discourage use of "_".
+	Updated all the filenames and docs to reflect this change.
+
+2000-03-05  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* Removed the README.{en,ru}.txt files which were accidentally
+	left sitting in the doc/.
+
+2000-02-16  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* Slightly modified the encodings: koi8-1 now has an additional
+	"space" at 0x9A (for compatibility with koi8-r), and koi8-ru
+	has an additional "space" at 0xA0 (for compatibility with
+	iso8859-*.
+
+2000-01-24  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* Switched off the "&B" fndry-suffix and made appropriate
+	modifications in the documentation.
+
+	* Version 1.0 release.
+
+2000-01-23  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* Performed some proofreading of all fonts:
+		1) checked the "Euro" sign to resemble the canonical
+		   shape;
+		2) checked the "rouble" sign to have dot;
+		3) made custom versions of "Edieresis"/"edieresis" and
+		   "Idieresis"/"idieresis" for "YO"/yo" and "YI"/"yi" in
+		   some fonts, where standard glyphs were too different
+		   from unaccented ones or the dieresis was poorly
+		   represented.
+
+2000-01-22  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* The whole tim* family is koi8-complete.
+	So, *ALL* the fonts are cyrillized.
+
+2000-01-06  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* The whole helv* family is koi8-complete.
+
+2000-01-04  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* The whole cour* family is koi8-complete.
+
+1999-12-31  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* Italics/obliques are done up to 14pt in tim* and cour*, and up to
+	18pt in helv*.  So, now, at the end of 1999, there are only 10
+	font-files left before the total koi8-completeness.
+
+1999-12-28  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* Modified the appearance of "Euro" sign in a number of misc/
+	fonts to resemble the canonical shape.
+
+1999-12-20  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* All the lu{IS,BIS}* fonts are koi8-complete.  So, the "lu"
+	family is finished.
+	Yes!  I did it!
+
+1999-12-16  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* Erased an artefact in the "capital CH" in timB18.
+
+1999-11-29  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* The first *italic* "lu" font is koi8-complete -- luIS14.
+	So, the shape of italic "lu" fonts is defined.
+
+1999-11-06  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* The "CAPITAL_CYRILLIC_I" and its derivatives were corrected
+	in the tim[RBI]14.bdf fonts.
+
+1999-11-03  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* All the lu[RB]S{08,10,12,14,18,19,24}.bdf files are koi8-complete.
+	So, now we have *all* roman and bold (non-italic/non-oblique) fonts.
+
+1999-11-02  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* All the tim[RB]{08,10,12,14,18,24}.bdf files are
+	koi8-complete.
+
+	* Some proofreading performed. Slightly changed a few glyphs
+	for better legibility and corrected the DWIDTH parameter in
+	some glyphs. The fonts affected are helvR08, helvR10, helvB08,
+	helvB10, helvB12, helvB14, helvO10, helvO12, luRS14, luBS12,
+	luBS18, timR08, timR14, timR18, timR24, timB08, timB10, timB12,
+	timI10. 
+
+1999-10-26  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* All lut[RB]S{08,10,12,14,18,19,24}.bdf files are koi8-complete.
+	So, the very first goal of the project is reached. 
+
+1999-10-24  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* HTML'ized the README-files.
+
+	* Added the installation instructions -- doc/INSTALL.{en,ru}.txt.
+
+1999-10-22  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* Added the doc/ directory to webpage and to distribution
+	tarballs.
+
+	* Created the logo -- doc/cyr_rfx_logo.gif.
+
+1999-10-12  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* Set up a webpage for CYR_RFX at
+	http://www.inp.nsk.su/~bolkhov/files/fonts/cyr_rfx/
+
+1999-10-11  Dmitry Bolkhovityanov  <bolkhov@inp.nsk.su>
+
+	* Added winlatin-1 and iso8859-15 encodings (both are latin
+	with a Euro sign).

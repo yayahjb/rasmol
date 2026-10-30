@@ -1,0 +1,67 @@
+!
+!  Resources for koi8-r/1 and windows-1251 support for Netscape3
+!  (1251 also requires 1251-hack -- see mknetscape3_1251.pl)
+!
+
+Netscape*defaultCharset:                koi8-r
+
+Netscape*localeCharset*C:               koi8-r
+Netscape*localeCharset*ru_SU:         	koi8-r
+Netscape*localeCharset*ru_SU.KOI8-R:  	koi8-r
+Netscape*localeCharset*russian:         koi8-r
+Netscape*localeCharset*ru_RU.KOI8:      koi8-r
+Netscape*localeCharset*ru_RU.KOI8-R:    koi8-r
+Netscape*localeCharset*ru_RU.koi8-r:    koi8-r
+Netscape*localeCharset*KOI8-R:          koi8-r
+Netscape*localeCharset*KOI8:            koi8-r
+
+Netscape*localeCharset*cyrillic:        iso-8859-5
+Netscape*localeCharset*ru:              iso-8859-5
+Netscape*localeCharset*ru_RU:           iso-8859-5
+Netscape*localeCharset*ru_RU.ISO8859-5: iso-8859-5
+
+Netscape*httpAcceptLanguage:	ru, en;q=0.9, *;q=0.01\
+\nAccept-Charset: koi8-r;q=1.0, iso-8859-5;q=0.9, iso-8859-1;q=0.5, *;q=0.1
+
+
+Netscape*fontList:                     -*-helvetica-bold-r-*-*-*-140-*-*-*-*-koi8-1
+Netscape*XmTextField.fontList:         -*-courier-medium-r-*-*-*-120-*-*-*-*-koi8-1
+Netscape*XmText.fontList:              -*-courier-medium-r-*-*-*-120-*-*-*-*-koi8-1
+Netscape*XmList*fontList:              -*-courier-medium-r-*-*-*-120-*-*-*-*-koi8-1
+
+Netscape*menuBar*fontList:             -*-helvetica-bold-r-*-*-*-120-*-*-*-*-koi8-1
+Netscape*popup*fontList:               -*-helvetica-bold-r-*-*-*-120-*-*-*-*-koi8-1
+
+Netscape*topArea*fontList:             -*-helvetica-bold-r-*-*-*-120-*-*-*-*-koi8-1
+Netscape*topArea*XmTextField.fontList: -*-courier-medium-r-*-*-*-120-*-*-*-*-koi8-1
+Netscape*topArea*XmText.fontList:      -*-courier-medium-r-*-*-*-120-*-*-*-*-koi8-1
+
+Netscape*bookmark*fontList:            -*-helvetica-medium-r-*-*-*-120-*-*-*-*-koi8-1
+Netscape*bookmark*selectedLabel.fontList: -*-helvetica-medium-r-*-*-*-120-*-*-*-*-koi8-1
+Netscape*bookmark*XmTextField.fontList: -*-courier-medium-r-*-*-*-120-*-*-*-*-koi8-1
+Netscape*bookmark*XmText.fontList:     -*-courier-medium-r-*-*-*-120-*-*-*-*-koi8-1
+
+Netscape*mouseDocumentation.fontList:  -*-helvetica-medium-r-*-*-*-120-*-*-*-*-koi8-1
+Netscape*docinfoButton.fontList:      -*-helvetica-medium-r-*-*-*-120-*-*-*-*-koi8-1
+Netscape*mailto*urlLabel.fontList:    -*-helvetica-medium-r-*-*-*-140-*-*-*-*-koi8-1
+
+Netscape*licenseDialog*text.fontList:   -*-courier-medium-r-*-*-*-120-*-*-*-*-koi8-1
+
+Netscape*XmLGrid*fontList:\
+-*-helvetica-medium-r-*-*-*-100-*-*-*-*-koi8-1,\
+-*-helvetica-bold-r-*-*-*-100-*-*-*-*-koi8-1=BOLD,\
+-*-helvetica-medium-o-*-*-*-100-*-*-*-*-koi8-1=ITALIC
+
+!
+! Resources for windows-1251 in Netscape-3.04/hacked
+!
+Netscape*menuBar*1251.labelString: Cyrillic (Windows-1251)
+Netscape*documentFonts.charsetlang*windows-1251: Cyrillic
+
+Netscape*documentFonts.charset*iso8859-9:     x-ignore
+Netscape*documentFonts.charset*windows-1251:  windows-1251
+Netscape*documentFonts.charset*win-r:         windows-1251
+Netscape*documentFonts.charset*win-1251:      windows-1251
+
+! full font latin1   IntelliFont
+Netscape*documentFonts.charset*winlatin-1:    iso-8859-1 

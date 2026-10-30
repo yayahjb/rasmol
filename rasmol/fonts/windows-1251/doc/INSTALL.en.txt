@@ -1,0 +1,142 @@
+	Installation of CYR-RFX fonts
+        =============================
+
+	I. Overview
+        ===========
+
+The installation procedure is quite simple: first, you should unpack
+the files to some location, and than instruct the X-server to use them
+(i.e. add the directories to server's font path).
+
+On both stages you have two alternatives.  First, the installation
+method: system-wide (if you are administrator) or personal (if you just
+have an account somewhere and wish to use these fonts).  Second, you
+may wish for new fonts to take precedence over standard fonts in
+wildcard- and alias-matching.
+
+In all the examples below, replace "ENCODING" with an actual encoding
+you are installing ("koi8-1", "iso8859-15", etc.).
+
+
+	II. System-wide installation
+        ============================
+
+0. Become root ;-)
+
+1. First, extract the tarball into <XRoot>/lib/X11/fonts/ (in case of X11R6
+<XRoot> is usually /usr/X11R6, and /usr/openwin in Sun OpenWindows):
+
+	gzip -dc cyr-rfx_ENCODING-1.0.tgz | tar xf - -C /usr/X11R6/lib/X11/fonts/
+
+The .tgz files are already archived with user=root and uid=root, but if
+you are paranoid (as I am ;), the command
+
+	chown -R 0:0 /usr/X11R6/lib/X11/fonts/ENCODING
+
+will help.
+
+2. Second, the X server should be instructed to pick the fonts on
+startup. I.e. the new directories should be added the the server's
+"font path" list.
+
+There are two cases.
+
+2a. If your X-server renders the fonts itself, this list is described
+by "FontPath" directives in X-server config file (if using XFree86
+servers on IntelX86, it is usually /etc/X11/XF86Config or
+/usr/X11R6/lib/X11/XF86Config).
+
+In this case just add two "FontPath" directives just before or after
+the existing list, so that it will look like
+
+	FontPath    "/usr/X11R6/lib/X11/fonts/ENCODING/misc/"
+	FontPath    "/usr/X11R6/lib/X11/fonts/ENCODING/75dpi/"
+	FontPath    "/usr/X11R6/lib/X11/fonts/misc/"
+	FontPath    "/usr/X11R6/lib/X11/fonts/Type1/"
+	. . .
+
+(two first lines were added).
+
+2b. If your X-server uses a font-server (xfs) to render the fonts, the
+only "FontPath" directive will probably point to "unix/:-1" (as it is
+in RedHat Linux 6.x).  In this case the font list is described with a
+"catalogue=" directive in the xfs' config file (usually
+/etc/X11/fs/config or /usr/X11R6/lib/X11/fs/config).
+
+So, just add two entries to "catalogue=" (don't forget about separating
+commas!), so that it will look like
+
+	catalogue=/usr/X11R6/lib/X11/fonts/ENCODING/misc,
+		/usr/X11R6/lib/X11/fonts/ENCODING/75dpi/,
+		/usr/X11R6/lib/X11/fonts/misc,
+		/usr/X11R6/lib/X11/fonts/75dpi,
+		. . .
+
+In both cases, the new configuration will be used after restart. (Or
+you can use new fonts immediately by manually typing "xset +fp ..." in
+the first case, or send a SIGHUP to xfs and typing "xset fp rehash" in
+the second case.)
+
+
+	III. Personal installation
+        ==========================
+
+1. First, extract the tarball somewhere into your home-dir.  For
+example, to use ~/fonts/, do the following:
+
+	mkdir ~/fonts
+	gzip -dc cyr-rfx_ENCODING-1.0.tgz | tar xf - -C ~/fonts/
+
+2. Second, new fonts' directories should be added to X-server's "font
+path" on startup.  It can be achieved by adding the commands
+
+	xset +fp ~/fonts/ENCODING/misc
+	xset +fp ~/fonts/ENCODING/75dpi
+
+to the beginning of one of X startup files -- usually ~/.xinitrc,
+~/.Xclients or ~/.xsession.  Use "xset fp+" instead of "xset +fp" to
+add directories to the end of "font path" instead of the beginning.
+
+
+	IV. Common notes
+        ================
+
+1. You may wish to compress the fonts in order to reduce the amount of
+occupied disk space.  To do so, just "gzip" (or "compress") all the
+.pcf files in each directory and than redo the fonts.dir by running
+"mkfontdir".
+
+For example, to compress the fonts in /usr/X11R6/lib/X11/koi8-1/75dpi,
+run the following commands:
+
+	gzip /usr/X11R6/lib/X11/koi8-1/75dpi/*.pcf
+	mkfontdir /usr/X11R6/lib/X11/koi8-1/75dpi
+
+
+2. You may wish for new fonts to take precedence over standard fonts
+(for example, for most programs use koi8 fonts instead of latin, or to
+use iso8859-15 fonts instead of iso8859-1).  In this case, place new
+directories at the beginning of "font path" list, otherwise place them
+at the end.
+
+
+3. You may wish to play with ":unscaled" attribute in the recent
+versions of XFree86 (>=3.1.2).
+
+In this case you should add both directories to "font path" twice: once
+as "dir:unscaled", and than (after the scaled-fonts directories) as
+usual. I.e., the whole font path will probably look like
+
+	/usr/X11R6/lib/X11/fonts/ENCODING/misc:unscaled
+	/usr/X11R6/lib/X11/fonts/misc:unscaled
+	/usr/X11R6/lib/X11/fonts/ENCODING/75dpi:unscaled
+	/usr/X11R6/lib/X11/fonts/75dpi:unscaled
+	/usr/X11R6/lib/X11/fonts/ENCODING/misc
+	/usr/X11R6/lib/X11/fonts/misc
+	/usr/X11R6/lib/X11/fonts/Type1
+	/usr/X11R6/lib/X11/fonts/Speedo
+	/usr/X11R6/lib/X11/fonts/ENCODING/75dpi
+	/usr/X11R6/lib/X11/fonts/75dpi
+
+______________________________________________________________________
+	(C) 2000 Dmitry Bolkhovityanov <bolkhov@inp.nsk.su>
