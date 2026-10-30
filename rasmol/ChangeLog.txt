@@ -16,7 +16,7 @@
   * RasMol 2.7.6 Source Repository https://github.com/cctbx/rasmol.git
 
                      Molecular Graphics Visualisation Tool
-                     14 October 2026 (rev 28 October 2026)
+                     14 October 2026 (rev 29 October 2026)
 
                        Based on RasMol 2.6 by Roger Sayle
 Biomolecular Structures Group, Glaxo Wellcome Research & Development, Stevenage,
@@ -83,7 +83,10 @@ Herbert J. Bernstein, 11 Riverside Drive, Apt 5UE, New York, NY 10023-1317, USA
   Changes from RasMol 2.7.5 to create RasMol 2.7.6 include:
 
 
-   [28/10/2026]   HJB ChangeLog.9, ChangeLog.html, Changelog.txt
+   [29/10/2026]   HJB rasmol_install.sh
+                  Update to 2.7.6 and fix typo in help message
+
+   [29/10/2026]   HJB ChangeLog.9, ChangeLog.html, Changelog.txt
                   bring ChangeLog up to date
 
    [28/10/2026]   HJB INSTALL, INSTALL.html, README, README.html, README.shtml*, README.txt,
